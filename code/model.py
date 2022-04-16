@@ -28,17 +28,17 @@ df_test = pd.read_csv('test.csv', dtype=dtype)
 
 print(df_train.shape, df_test.shape)
 
-bert_train = pd.read_csv('../bert2/train_3class.csv')
-bert_test = pd.read_csv('../bert2/test_3class.csv')
+# bert_train = pd.read_csv('../bert2/train_3class.csv')
+# bert_test = pd.read_csv('../bert2/test_3class.csv')
 
-df_train = pd.concat([df_train, bert_train.iloc[:, 8:]], axis=1)
-df_test = pd.concat([df_test, bert_test.iloc[:, 8:]], axis=1)
+# df_train = pd.concat([df_train, bert_train.iloc[:, 8:]], axis=1)
+# df_test = pd.concat([df_test, bert_test.iloc[:, 8:]], axis=1)
 
-# df_train2 = pd.read_csv('train2.csv')
-# df_test2 = pd.read_csv('test2.csv')
+df_train2 = pd.read_csv('train2.csv')
+df_test2 = pd.read_csv('test2.csv')
 
-# df_train = df_train.merge(df_train2, on=['sn', 'fault_time', 'label'])
-# df_test = df_test.merge(df_test2, on=['sn', 'fault_time'])
+df_train = df_train.merge(df_train2, on=['sn', 'fault_time', 'label'])
+df_test = df_test.merge(df_test2, on=['sn', 'fault_time'])
 
 print(df_train.shape, df_test.shape)
 
