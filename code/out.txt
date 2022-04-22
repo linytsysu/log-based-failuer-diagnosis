@@ -1,330 +1,744 @@
 nohup: ignoring input
-(16604, 119) (3030, 118)
-(16604, 996) (3030, 995)
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0365251	test: 1.0391657	best: 1.0391657 (0)	total: 536ms	remaining: 1h 29m 15s
-100:	learn: 0.1845917	test: 0.2196572	best: 0.2196572 (100)	total: 48.8s	remaining: 1h 19m 43s
-200:	learn: 0.1407100	test: 0.1976257	best: 0.1976257 (200)	total: 1m 36s	remaining: 1h 18m 33s
-300:	learn: 0.1193636	test: 0.1923432	best: 0.1922968 (297)	total: 2m 24s	remaining: 1h 17m 31s
-400:	learn: 0.1045845	test: 0.1892812	best: 0.1892156 (394)	total: 3m 11s	remaining: 1h 16m 33s
-500:	learn: 0.0922013	test: 0.1883588	best: 0.1881071 (490)	total: 3m 59s	remaining: 1h 15m 44s
+(16604, 123) (3030, 122)
+2 {0: 1.1406870229007633, 1: 0.8902061241510782}
+0:	learn: 0.6565955	test: 0.6569557	best: 0.6569557 (0)	total: 124ms	remaining: 20m 40s
+100:	learn: 0.1567897	test: 0.1665020	best: 0.1665020 (100)	total: 8.78s	remaining: 14m 20s
+200:	learn: 0.1218200	test: 0.1434819	best: 0.1434819 (200)	total: 17.4s	remaining: 14m 8s
+300:	learn: 0.1013836	test: 0.1346021	best: 0.1346021 (300)	total: 26s	remaining: 13m 57s
+400:	learn: 0.0870821	test: 0.1294232	best: 0.1293383 (393)	total: 34.4s	remaining: 13m 44s
+500:	learn: 0.0753016	test: 0.1260116	best: 0.1260116 (500)	total: 42.9s	remaining: 13m 32s
+600:	learn: 0.0666950	test: 0.1238843	best: 0.1238843 (600)	total: 51.3s	remaining: 13m 21s
+700:	learn: 0.0588754	test: 0.1223087	best: 0.1222660 (698)	total: 59.6s	remaining: 13m 10s
+800:	learn: 0.0524948	test: 0.1215990	best: 0.1215196 (793)	total: 1m 8s	remaining: 13m 1s
+900:	learn: 0.0471792	test: 0.1208085	best: 0.1208085 (900)	total: 1m 16s	remaining: 12m 52s
+1000:	learn: 0.0427909	test: 0.1202881	best: 0.1202881 (1000)	total: 1m 24s	remaining: 12m 43s
+1100:	learn: 0.0391066	test: 0.1198454	best: 0.1197490 (1095)	total: 1m 33s	remaining: 12m 33s
+1200:	learn: 0.0356843	test: 0.1194687	best: 0.1194687 (1200)	total: 1m 41s	remaining: 12m 25s
+1300:	learn: 0.0327482	test: 0.1193849	best: 0.1192802 (1279)	total: 1m 50s	remaining: 12m 15s
+1400:	learn: 0.0302450	test: 0.1194550	best: 0.1192564 (1327)	total: 1m 58s	remaining: 12m 6s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.1881071246
-bestIteration = 490
+bestTest = 0.1192564393
+bestIteration = 1327
 
-Shrink model to first 491 iterations.
-0.9009869937104763
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6911020	test: 0.6914063	best: 0.6914063 (0)	total: 57.5ms	remaining: 9m 34s
-100:	learn: 0.5776603	test: 0.6134551	best: 0.6134551 (100)	total: 6.89s	remaining: 11m 15s
-200:	learn: 0.5324422	test: 0.5983464	best: 0.5983464 (200)	total: 13.8s	remaining: 11m 11s
-300:	learn: 0.5007948	test: 0.5950322	best: 0.5949537 (295)	total: 20.8s	remaining: 11m 10s
+Shrink model to first 1328 iterations.
+Features importance...
+           imp                   feature
+0     0.006929        max_continuous_msg
+1     0.063442             crashdump_cnt
+2     0.120573  msg_appearance_2_percent
+3     0.138111                    w2v_53
+4     0.143823                    w2v_47
+..         ...                       ...
+115   2.849339              server_model
+116   3.905287          last_template_id
+117   5.043811       second_span_mean_2h
+118   9.363658                     tfv_0
+119  10.300520            second_span_2h
+
+[120 rows x 2 columns]
+0.9506013599028043
+3 {0: 1.6379094773693423, 1: 0.7151435746260508, 3: 1.0089340727048675}
+0:	learn: 1.0886777	test: 1.0888032	best: 1.0888032 (0)	total: 80.5ms	remaining: 13m 25s
+100:	learn: 0.6724158	test: 0.6897341	best: 0.6897341 (100)	total: 7.83s	remaining: 12m 47s
+200:	learn: 0.5623149	test: 0.6094269	best: 0.6094269 (200)	total: 15.6s	remaining: 12m 38s
+300:	learn: 0.5036779	test: 0.5792568	best: 0.5792568 (300)	total: 23.2s	remaining: 12m 26s
+400:	learn: 0.4642387	test: 0.5631540	best: 0.5631540 (400)	total: 30.8s	remaining: 12m 18s
+500:	learn: 0.4313196	test: 0.5554129	best: 0.5554129 (500)	total: 38.5s	remaining: 12m 10s
+600:	learn: 0.4066499	test: 0.5499592	best: 0.5499592 (600)	total: 46.1s	remaining: 12m 1s
+700:	learn: 0.3849334	test: 0.5461626	best: 0.5461393 (695)	total: 53.7s	remaining: 11m 51s
+800:	learn: 0.3636443	test: 0.5432040	best: 0.5432040 (800)	total: 1m 1s	remaining: 11m 45s
+900:	learn: 0.3449948	test: 0.5414883	best: 0.5413698 (898)	total: 1m 9s	remaining: 11m 37s
+1000:	learn: 0.3285463	test: 0.5403099	best: 0.5403099 (1000)	total: 1m 16s	remaining: 11m 29s
+1100:	learn: 0.3140489	test: 0.5407927	best: 0.5401419 (1062)	total: 1m 24s	remaining: 11m 20s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.5949536915
-bestIteration = 295
+bestTest = 0.5401419143
+bestIteration = 1062
 
-Shrink model to first 296 iterations.
-F1 score: 0.7409934918227002
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0375566	test: 1.0374734	best: 1.0374734 (0)	total: 492ms	remaining: 1h 22m
-100:	learn: 0.1869743	test: 0.2239860	best: 0.2239860 (100)	total: 49.3s	remaining: 1h 20m 28s
-200:	learn: 0.1406714	test: 0.1979300	best: 0.1979300 (200)	total: 1m 37s	remaining: 1h 19m 1s
-300:	learn: 0.1186010	test: 0.1895508	best: 0.1895508 (300)	total: 2m 25s	remaining: 1h 17m 53s
-400:	learn: 0.1034977	test: 0.1838501	best: 0.1838501 (400)	total: 3m 12s	remaining: 1h 16m 53s
-500:	learn: 0.0914237	test: 0.1811179	best: 0.1808651 (481)	total: 4m	remaining: 1h 16m 2s
-600:	learn: 0.0819721	test: 0.1788791	best: 0.1788791 (600)	total: 4m 48s	remaining: 1h 15m 11s
-700:	learn: 0.0738309	test: 0.1779526	best: 0.1778324 (698)	total: 5m 36s	remaining: 1h 14m 22s
-800:	learn: 0.0669238	test: 0.1774242	best: 0.1773899 (796)	total: 6m 24s	remaining: 1h 13m 33s
-900:	learn: 0.0611111	test: 0.1774615	best: 0.1771239 (837)	total: 7m 15s	remaining: 1h 13m 17s
+Shrink model to first 1063 iterations.
+Features importance...
+          imp            feature
+0    0.108029  time_diffs_min_2h
+1    0.123522          venus_cnt
+2    0.132365      crashdump_cnt
+3    0.196496             w2v_62
+4    0.207702             w2v_38
+..        ...                ...
+115  3.548992   tmp_appearance_1
+116  4.005249   tmp_appearance_2
+117  4.128865   last_template_id
+118  4.556263     second_span_2h
+119  7.268143       server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7622140096434273
+F1 score: 0.6469694073432739
+2 {0: 1.1377341251713111, 1: 0.892012893982808}
+0:	learn: 0.6570027	test: 0.6570559	best: 0.6570559 (0)	total: 75.2ms	remaining: 12m 31s
+100:	learn: 0.1534525	test: 0.1862457	best: 0.1862457 (100)	total: 8.65s	remaining: 14m 7s
+200:	learn: 0.1191450	test: 0.1719554	best: 0.1719554 (200)	total: 17.2s	remaining: 13m 57s
+300:	learn: 0.0981600	test: 0.1647012	best: 0.1647012 (300)	total: 25.6s	remaining: 13m 44s
+400:	learn: 0.0844064	test: 0.1608068	best: 0.1608068 (400)	total: 33.9s	remaining: 13m 31s
+500:	learn: 0.0725949	test: 0.1574823	best: 0.1574823 (500)	total: 42.2s	remaining: 13m 20s
+600:	learn: 0.0635392	test: 0.1560977	best: 0.1560833 (599)	total: 50.6s	remaining: 13m 11s
+700:	learn: 0.0567232	test: 0.1549952	best: 0.1549287 (697)	total: 58.9s	remaining: 13m 1s
+800:	learn: 0.0507388	test: 0.1548551	best: 0.1547655 (769)	total: 1m 7s	remaining: 12m 51s
+900:	learn: 0.0455385	test: 0.1549362	best: 0.1545388 (819)	total: 1m 15s	remaining: 12m 42s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.1771238571
-bestIteration = 837
+bestTest = 0.1545388079
+bestIteration = 819
 
-Shrink model to first 838 iterations.
-0.8996683792694157
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6906095	test: 0.6912046	best: 0.6912046 (0)	total: 59.7ms	remaining: 9m 57s
-100:	learn: 0.5777430	test: 0.6098917	best: 0.6098917 (100)	total: 7.03s	remaining: 11m 29s
-200:	learn: 0.5340078	test: 0.5929057	best: 0.5929057 (200)	total: 14.1s	remaining: 11m 28s
-300:	learn: 0.5041294	test: 0.5865797	best: 0.5865797 (300)	total: 21.2s	remaining: 11m 23s
-400:	learn: 0.4802010	test: 0.5824284	best: 0.5822704 (392)	total: 28.2s	remaining: 11m 15s
-500:	learn: 0.4587903	test: 0.5822530	best: 0.5816776 (416)	total: 35.2s	remaining: 11m 7s
+Shrink model to first 820 iterations.
+Features importance...
+           imp              feature
+0     0.000000   max_continuous_msg
+1     0.009726     msg_appearance_1
+2     0.034034        crashdump_cnt
+3     0.094703               w2v_53
+4     0.097077               w2v_45
+..         ...                  ...
+115   2.937643         server_model
+116   4.450129  second_span_mean_2h
+117   4.979161     last_template_id
+118   9.973261       second_span_2h
+119  10.831910                tfv_0
+
+[120 rows x 2 columns]
+0.9448924612267648
+3 {0: 1.6397003745318353, 1: 0.7210144927536232, 3: 0.9968123861566485}
+0:	learn: 1.0879623	test: 1.0887687	best: 1.0887687 (0)	total: 80.3ms	remaining: 13m 22s
+100:	learn: 0.6701737	test: 0.7076232	best: 0.7076232 (100)	total: 7.88s	remaining: 12m 51s
+200:	learn: 0.5609864	test: 0.6329151	best: 0.6329151 (200)	total: 15.7s	remaining: 12m 43s
+300:	learn: 0.5034026	test: 0.6048113	best: 0.6048113 (300)	total: 23.3s	remaining: 12m 29s
+400:	learn: 0.4636141	test: 0.5913427	best: 0.5913427 (400)	total: 30.9s	remaining: 12m 20s
+500:	learn: 0.4334035	test: 0.5846135	best: 0.5846135 (500)	total: 38.6s	remaining: 12m 11s
+600:	learn: 0.4069177	test: 0.5787836	best: 0.5787836 (600)	total: 46.3s	remaining: 12m 4s
+700:	learn: 0.3842789	test: 0.5748120	best: 0.5748120 (700)	total: 54s	remaining: 11m 55s
+800:	learn: 0.3635243	test: 0.5713404	best: 0.5713404 (800)	total: 1m 1s	remaining: 11m 47s
+900:	learn: 0.3445834	test: 0.5696495	best: 0.5692017 (886)	total: 1m 9s	remaining: 11m 38s
+1000:	learn: 0.3269997	test: 0.5671832	best: 0.5671832 (1000)	total: 1m 16s	remaining: 11m 30s
+1100:	learn: 0.3101818	test: 0.5653618	best: 0.5653618 (1100)	total: 1m 24s	remaining: 11m 22s
+1200:	learn: 0.2945086	test: 0.5645786	best: 0.5645193 (1194)	total: 1m 32s	remaining: 11m 14s
+1300:	learn: 0.2804229	test: 0.5632357	best: 0.5631988 (1286)	total: 1m 39s	remaining: 11m 6s
+1400:	learn: 0.2668284	test: 0.5628995	best: 0.5628995 (1400)	total: 1m 47s	remaining: 10m 58s
+1500:	learn: 0.2545426	test: 0.5629490	best: 0.5626245 (1481)	total: 1m 54s	remaining: 10m 50s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.5816775689
-bestIteration = 416
+bestTest = 0.5626244765
+bestIteration = 1481
 
-Shrink model to first 417 iterations.
-F1 score: 0.7507407530323524
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0374732	test: 1.0390125	best: 1.0390125 (0)	total: 491ms	remaining: 1h 21m 51s
-100:	learn: 0.1870686	test: 0.2145076	best: 0.2145076 (100)	total: 50.8s	remaining: 1h 22m 54s
-200:	learn: 0.1435134	test: 0.1879292	best: 0.1879292 (200)	total: 1m 39s	remaining: 1h 21m 3s
-300:	learn: 0.1201837	test: 0.1803060	best: 0.1802671 (299)	total: 2m 28s	remaining: 1h 19m 44s
-400:	learn: 0.1029222	test: 0.1761761	best: 0.1761761 (400)	total: 3m 17s	remaining: 1h 18m 39s
-500:	learn: 0.0915424	test: 0.1732922	best: 0.1732922 (500)	total: 4m 5s	remaining: 1h 17m 42s
-600:	learn: 0.0821672	test: 0.1731349	best: 0.1726761 (564)	total: 4m 54s	remaining: 1h 16m 50s
-700:	learn: 0.0747842	test: 0.1725743	best: 0.1722697 (647)	total: 5m 43s	remaining: 1h 16m
+Shrink model to first 1482 iterations.
+Features importance...
+          imp            feature
+0    0.125281          venus_cnt
+1    0.139468  time_diffs_min_2h
+2    0.147617      crashdump_cnt
+3    0.203357             w2v_39
+4    0.204284             w2v_17
+..        ...                ...
+115  3.802223   tmp_appearance_1
+116  3.830193   tmp_appearance_2
+117  4.272531   last_template_id
+118  5.013965     second_span_2h
+119  6.765792       server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7499211432801283
+F1 score: 0.642134381250768
+2 {0: 1.144355950375249, 1: 0.8879843118611838}
+0:	learn: 0.6562377	test: 0.6571823	best: 0.6571823 (0)	total: 75.5ms	remaining: 12m 35s
+100:	learn: 0.1548460	test: 0.1795758	best: 0.1795758 (100)	total: 8.63s	remaining: 14m 5s
+200:	learn: 0.1201061	test: 0.1589628	best: 0.1589628 (200)	total: 17.2s	remaining: 13m 56s
+300:	learn: 0.1004396	test: 0.1502470	best: 0.1502470 (300)	total: 25.7s	remaining: 13m 46s
+400:	learn: 0.0867053	test: 0.1443687	best: 0.1443687 (400)	total: 33.9s	remaining: 13m 30s
+500:	learn: 0.0763538	test: 0.1412328	best: 0.1411831 (489)	total: 42.1s	remaining: 13m 18s
+600:	learn: 0.0669019	test: 0.1398704	best: 0.1398704 (600)	total: 50.5s	remaining: 13m 9s
+700:	learn: 0.0592737	test: 0.1382787	best: 0.1382519 (695)	total: 58.8s	remaining: 12m 59s
+800:	learn: 0.0530375	test: 0.1375569	best: 0.1373957 (794)	total: 1m 7s	remaining: 12m 50s
+900:	learn: 0.0477239	test: 0.1376299	best: 0.1373839 (806)	total: 1m 15s	remaining: 12m 41s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.1722696662
-bestIteration = 647
+bestTest = 0.1373839033
+bestIteration = 806
 
-Shrink model to first 648 iterations.
-0.8948012200468504
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6908759	test: 0.6911653	best: 0.6911653 (0)	total: 59.6ms	remaining: 9m 55s
-100:	learn: 0.5778397	test: 0.6086437	best: 0.6086437 (100)	total: 7.07s	remaining: 11m 33s
-200:	learn: 0.5337199	test: 0.5907811	best: 0.5907811 (200)	total: 14s	remaining: 11m 24s
-300:	learn: 0.5035370	test: 0.5840484	best: 0.5840220 (299)	total: 21s	remaining: 11m 16s
-400:	learn: 0.4785233	test: 0.5805754	best: 0.5805338 (399)	total: 28.1s	remaining: 11m 12s
-500:	learn: 0.4570084	test: 0.5789625	best: 0.5789625 (500)	total: 35.3s	remaining: 11m 9s
-600:	learn: 0.4376434	test: 0.5782760	best: 0.5781123 (572)	total: 42.5s	remaining: 11m 4s
+Shrink model to first 807 iterations.
+Features importance...
+           imp              feature
+0     0.027533        crashdump_cnt
+1     0.088294               w2v_45
+2     0.113931                w2v_4
+3     0.124944               w2v_32
+4     0.127693               w2v_54
+..         ...                  ...
+115   3.153915         server_model
+116   4.649216  second_span_mean_2h
+117   4.953104     last_template_id
+118   9.966729       second_span_2h
+119  11.054689                tfv_0
+
+[120 rows x 2 columns]
+0.9479290605169839
+3 {0: 1.643756294058409, 1: 0.7158991228070175, 3: 1.0052347959969208}
+0:	learn: 1.0883743	test: 1.0884762	best: 1.0884762 (0)	total: 77.4ms	remaining: 12m 54s
+100:	learn: 0.6663210	test: 0.6991651	best: 0.6991651 (100)	total: 7.82s	remaining: 12m 46s
+200:	learn: 0.5569128	test: 0.6288199	best: 0.6288199 (200)	total: 15.5s	remaining: 12m 35s
+300:	learn: 0.5002871	test: 0.6023480	best: 0.6023480 (300)	total: 23.1s	remaining: 12m 25s
+400:	learn: 0.4612211	test: 0.5887559	best: 0.5887559 (400)	total: 30.7s	remaining: 12m 15s
+500:	learn: 0.4311020	test: 0.5802324	best: 0.5802324 (500)	total: 38.3s	remaining: 12m 6s
+600:	learn: 0.4060049	test: 0.5749275	best: 0.5749275 (600)	total: 45.9s	remaining: 11m 58s
+700:	learn: 0.3822081	test: 0.5708617	best: 0.5708316 (697)	total: 53.6s	remaining: 11m 51s
+800:	learn: 0.3624073	test: 0.5671708	best: 0.5671708 (800)	total: 1m 1s	remaining: 11m 43s
+900:	learn: 0.3433175	test: 0.5656669	best: 0.5655393 (897)	total: 1m 8s	remaining: 11m 36s
+1000:	learn: 0.3262674	test: 0.5638095	best: 0.5638095 (1000)	total: 1m 16s	remaining: 11m 27s
+1100:	learn: 0.3090697	test: 0.5625397	best: 0.5621435 (1075)	total: 1m 24s	remaining: 11m 20s
+1200:	learn: 0.2933352	test: 0.5612617	best: 0.5610775 (1159)	total: 1m 31s	remaining: 11m 12s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.5781122963
-bestIteration = 572
+bestTest = 0.5610775176
+bestIteration = 1159
 
-Shrink model to first 573 iterations.
-F1 score: 0.7284862546945589
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0365864	test: 1.0371832	best: 1.0371832 (0)	total: 496ms	remaining: 1h 22m 40s
-100:	learn: 0.1869564	test: 0.2175143	best: 0.2175143 (100)	total: 48.8s	remaining: 1h 19m 39s
-200:	learn: 0.1425591	test: 0.1912756	best: 0.1912756 (200)	total: 1m 36s	remaining: 1h 18m 31s
-300:	learn: 0.1198271	test: 0.1814691	best: 0.1814691 (300)	total: 2m 24s	remaining: 1h 17m 37s
-400:	learn: 0.1052880	test: 0.1765376	best: 0.1765376 (400)	total: 3m 12s	remaining: 1h 16m 45s
-500:	learn: 0.0927614	test: 0.1729327	best: 0.1729116 (497)	total: 4m	remaining: 1h 15m 53s
-600:	learn: 0.0826059	test: 0.1716299	best: 0.1715678 (598)	total: 4m 48s	remaining: 1h 15m 5s
-700:	learn: 0.0745496	test: 0.1697678	best: 0.1697678 (700)	total: 5m 35s	remaining: 1h 14m 14s
-800:	learn: 0.0680562	test: 0.1688486	best: 0.1686707 (792)	total: 6m 23s	remaining: 1h 13m 25s
-900:	learn: 0.0623220	test: 0.1684238	best: 0.1684238 (900)	total: 7m 11s	remaining: 1h 12m 35s
-1000:	learn: 0.0571649	test: 0.1679107	best: 0.1678609 (998)	total: 7m 59s	remaining: 1h 11m 47s
-1100:	learn: 0.0525064	test: 0.1677742	best: 0.1677741 (1007)	total: 8m 46s	remaining: 1h 10m 59s
-1200:	learn: 0.0486971	test: 0.1675448	best: 0.1673275 (1191)	total: 9m 34s	remaining: 1h 10m 11s
+Shrink model to first 1160 iterations.
+Features importance...
+          imp            feature
+0    0.076769  time_diffs_min_2h
+1    0.097596          venus_cnt
+2    0.112039             w2v_17
+3    0.134774      crashdump_cnt
+4    0.192268             w2v_16
+..        ...                ...
+115  3.836056   tmp_appearance_1
+116  3.993897   tmp_appearance_2
+117  4.358591   last_template_id
+118  4.621183     second_span_2h
+119  6.999562       server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7474260041962095
+F1 score: 0.6419926838123172
+2 {0: 1.1406870229007633, 1: 0.8902061241510782}
+0:	learn: 0.6574004	test: 0.6575173	best: 0.6575173 (0)	total: 74.6ms	remaining: 12m 26s
+100:	learn: 0.1537519	test: 0.1683532	best: 0.1683532 (100)	total: 8.62s	remaining: 14m 4s
+200:	learn: 0.1182442	test: 0.1510201	best: 0.1510201 (200)	total: 17.1s	remaining: 13m 53s
+300:	learn: 0.0993156	test: 0.1461340	best: 0.1461340 (300)	total: 25.5s	remaining: 13m 41s
+400:	learn: 0.0838721	test: 0.1437766	best: 0.1437766 (400)	total: 33.9s	remaining: 13m 32s
+500:	learn: 0.0728124	test: 0.1415386	best: 0.1414745 (499)	total: 42.3s	remaining: 13m 21s
+600:	learn: 0.0637198	test: 0.1406940	best: 0.1406816 (547)	total: 50.6s	remaining: 13m 10s
+700:	learn: 0.0566323	test: 0.1397807	best: 0.1397241 (697)	total: 58.9s	remaining: 13m 1s
+800:	learn: 0.0507802	test: 0.1393160	best: 0.1392211 (789)	total: 1m 7s	remaining: 12m 51s
+900:	learn: 0.0457550	test: 0.1392304	best: 0.1389968 (872)	total: 1m 15s	remaining: 12m 41s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.1673275113
-bestIteration = 1191
+bestTest = 0.1389968379
+bestIteration = 872
 
-Shrink model to first 1192 iterations.
-0.9059406300782037
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6911744	test: 0.6913570	best: 0.6913570 (0)	total: 57.4ms	remaining: 9m 33s
-100:	learn: 0.5788998	test: 0.6032828	best: 0.6032828 (100)	total: 6.95s	remaining: 11m 21s
-200:	learn: 0.5336222	test: 0.5845497	best: 0.5845497 (200)	total: 13.9s	remaining: 11m 16s
-300:	learn: 0.5013750	test: 0.5810685	best: 0.5810108 (297)	total: 20.8s	remaining: 11m 11s
-400:	learn: 0.4774681	test: 0.5803816	best: 0.5799529 (350)	total: 27.8s	remaining: 11m 5s
+Shrink model to first 873 iterations.
+Features importance...
+           imp                   feature
+0     0.009149          msg_appearance_1
+1     0.033580             crashdump_cnt
+2     0.124914  msg_appearance_2_percent
+3     0.140719                     w2v_6
+4     0.168854                    w2v_45
+..         ...                       ...
+115   2.925492              server_model
+116   4.709983       second_span_mean_2h
+117   4.921498          last_template_id
+118  10.142573                     tfv_0
+119  10.320969            second_span_2h
+
+[120 rows x 2 columns]
+0.9493097995122286
+3 {0: 1.6515380736258194, 1: 0.7142078290262784, 3: 1.0056809458007063}
+0:	learn: 1.0889256	test: 1.0897821	best: 1.0897821 (0)	total: 81.9ms	remaining: 13m 39s
+100:	learn: 0.6705243	test: 0.7090829	best: 0.7090829 (100)	total: 7.84s	remaining: 12m 48s
+200:	learn: 0.5605361	test: 0.6305311	best: 0.6305311 (200)	total: 15.6s	remaining: 12m 40s
+300:	learn: 0.5017896	test: 0.6038593	best: 0.6038593 (300)	total: 23.3s	remaining: 12m 29s
+400:	learn: 0.4626113	test: 0.5921228	best: 0.5921228 (400)	total: 31s	remaining: 12m 21s
+500:	learn: 0.4305193	test: 0.5850273	best: 0.5850273 (500)	total: 38.6s	remaining: 12m 12s
+600:	learn: 0.4061904	test: 0.5822762	best: 0.5822613 (597)	total: 46.3s	remaining: 12m 4s
+700:	learn: 0.3832311	test: 0.5802295	best: 0.5801029 (689)	total: 53.9s	remaining: 11m 55s
+800:	learn: 0.3623292	test: 0.5791608	best: 0.5791602 (799)	total: 1m 1s	remaining: 11m 47s
+900:	learn: 0.3439545	test: 0.5781195	best: 0.5780459 (896)	total: 1m 9s	remaining: 11m 39s
+1000:	learn: 0.3270557	test: 0.5785283	best: 0.5776782 (944)	total: 1m 16s	remaining: 11m 30s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.5799529201
-bestIteration = 350
+bestTest = 0.5776781933
+bestIteration = 944
 
-Shrink model to first 351 iterations.
-F1 score: 0.7529673174580538
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0370790	test: 1.0377538	best: 1.0377538 (0)	total: 489ms	remaining: 1h 21m 28s
-100:	learn: 0.1884060	test: 0.2131361	best: 0.2131361 (100)	total: 48.6s	remaining: 1h 19m 24s
-200:	learn: 0.1422309	test: 0.1853231	best: 0.1853231 (200)	total: 1m 36s	remaining: 1h 18m 14s
-300:	learn: 0.1202871	test: 0.1777762	best: 0.1777762 (300)	total: 2m 23s	remaining: 1h 17m 19s
-400:	learn: 0.1039943	test: 0.1741418	best: 0.1741418 (400)	total: 3m 11s	remaining: 1h 16m 27s
-500:	learn: 0.0924121	test: 0.1728999	best: 0.1728999 (500)	total: 3m 59s	remaining: 1h 15m 37s
-600:	learn: 0.0830217	test: 0.1725397	best: 0.1724532 (585)	total: 4m 46s	remaining: 1h 14m 46s
-700:	learn: 0.0750692	test: 0.1723204	best: 0.1723044 (647)	total: 5m 34s	remaining: 1h 13m 58s
-800:	learn: 0.0688392	test: 0.1723996	best: 0.1721566 (736)	total: 6m 22s	remaining: 1h 13m 9s
+Shrink model to first 945 iterations.
+Features importance...
+          imp            feature
+0    0.090793      crashdump_cnt
+1    0.127074  time_diffs_min_2h
+2    0.143014          venus_cnt
+3    0.218086             w2v_45
+4    0.218208             w2v_54
+..        ...                ...
+115  3.796569   tmp_appearance_1
+116  3.995924   tmp_appearance_2
+117  4.494531   last_template_id
+118  4.673992     second_span_2h
+119  7.071226       server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7560256361794823
+F1 score: 0.6494003330926408
+2 {0: 1.1405892230193864, 1: 0.8902656976051472}
+0:	learn: 0.6554394	test: 0.6552012	best: 0.6552012 (0)	total: 78.9ms	remaining: 13m 9s
+100:	learn: 0.1544185	test: 0.1769323	best: 0.1769323 (100)	total: 8.68s	remaining: 14m 10s
+200:	learn: 0.1193816	test: 0.1557171	best: 0.1557171 (200)	total: 17.2s	remaining: 14m
+300:	learn: 0.0995357	test: 0.1476225	best: 0.1476225 (300)	total: 25.7s	remaining: 13m 49s
+400:	learn: 0.0851811	test: 0.1435116	best: 0.1435116 (400)	total: 34.2s	remaining: 13m 38s
+500:	learn: 0.0730844	test: 0.1400803	best: 0.1400803 (500)	total: 42.7s	remaining: 13m 29s
+600:	learn: 0.0646532	test: 0.1380076	best: 0.1379745 (587)	total: 51s	remaining: 13m 18s
+700:	learn: 0.0572315	test: 0.1367502	best: 0.1366065 (688)	total: 59.4s	remaining: 13m 7s
+800:	learn: 0.0515408	test: 0.1361293	best: 0.1361220 (799)	total: 1m 7s	remaining: 12m 58s
+900:	learn: 0.0465715	test: 0.1354498	best: 0.1354185 (886)	total: 1m 16s	remaining: 12m 49s
+1000:	learn: 0.0421296	test: 0.1347419	best: 0.1346834 (998)	total: 1m 24s	remaining: 12m 39s
+1100:	learn: 0.0384673	test: 0.1340173	best: 0.1339962 (1098)	total: 1m 32s	remaining: 12m 29s
+1200:	learn: 0.0352921	test: 0.1333624	best: 0.1333624 (1200)	total: 1m 41s	remaining: 12m 20s
+1300:	learn: 0.0323472	test: 0.1334306	best: 0.1331338 (1255)	total: 1m 49s	remaining: 12m 12s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.172156578
-bestIteration = 736
+bestTest = 0.1331338376
+bestIteration = 1255
 
-Shrink model to first 737 iterations.
-0.8940897671908224
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6907297	test: 0.6909710	best: 0.6909710 (0)	total: 61.1ms	remaining: 10m 10s
-100:	learn: 0.5780223	test: 0.5965348	best: 0.5965348 (100)	total: 7.08s	remaining: 11m 34s
-200:	learn: 0.5313377	test: 0.5785985	best: 0.5783792 (199)	total: 14.2s	remaining: 11m 29s
-300:	learn: 0.5013837	test: 0.5747024	best: 0.5746439 (299)	total: 21.2s	remaining: 11m 23s
-400:	learn: 0.4764853	test: 0.5736051	best: 0.5730982 (385)	total: 28.3s	remaining: 11m 16s
-500:	learn: 0.4567912	test: 0.5730501	best: 0.5729652 (474)	total: 35.4s	remaining: 11m 10s
-600:	learn: 0.4373355	test: 0.5731773	best: 0.5725076 (541)	total: 42.4s	remaining: 11m 3s
+Shrink model to first 1256 iterations.
+Features importance...
+           imp                   feature
+0     0.000659               last_msg_id
+1     0.013702             crashdump_cnt
+2     0.056913                    w2v_47
+3     0.178818  tmp_appearance_2_percent
+4     0.186799                    tfv_13
+..         ...                       ...
+115   2.933818              server_model
+116   4.624069       second_span_mean_2h
+117   4.777916          last_template_id
+118   9.029040                     tfv_0
+119  10.179079            second_span_2h
+
+[120 rows x 2 columns]
+0.9524529964747357
+3 {0: 1.6369315342328836, 1: 0.7161911009074013, 3: 1.0072263222632227}
+0:	learn: 1.0903344	test: 1.0903500	best: 1.0903500 (0)	total: 79.6ms	remaining: 13m 15s
+100:	learn: 0.6722954	test: 0.6903533	best: 0.6903533 (100)	total: 7.83s	remaining: 12m 47s
+200:	learn: 0.5622013	test: 0.6110494	best: 0.6110494 (200)	total: 15.6s	remaining: 12m 40s
+300:	learn: 0.5043020	test: 0.5817633	best: 0.5817633 (300)	total: 23.3s	remaining: 12m 30s
+400:	learn: 0.4642669	test: 0.5672395	best: 0.5672395 (400)	total: 31s	remaining: 12m 21s
+500:	learn: 0.4325019	test: 0.5601310	best: 0.5601261 (499)	total: 38.7s	remaining: 12m 13s
+600:	learn: 0.4054933	test: 0.5545760	best: 0.5545760 (600)	total: 46.4s	remaining: 12m 5s
+700:	learn: 0.3842043	test: 0.5511235	best: 0.5511235 (700)	total: 54s	remaining: 11m 56s
+800:	learn: 0.3641430	test: 0.5492564	best: 0.5491388 (799)	total: 1m 1s	remaining: 11m 48s
+900:	learn: 0.3454077	test: 0.5473684	best: 0.5472317 (898)	total: 1m 9s	remaining: 11m 40s
+1000:	learn: 0.3284288	test: 0.5463895	best: 0.5462486 (986)	total: 1m 17s	remaining: 11m 32s
+1100:	learn: 0.3123992	test: 0.5459176	best: 0.5456638 (1094)	total: 1m 24s	remaining: 11m 24s
+1200:	learn: 0.2977711	test: 0.5452616	best: 0.5452616 (1200)	total: 1m 32s	remaining: 11m 16s
+1300:	learn: 0.2840437	test: 0.5451353	best: 0.5449877 (1281)	total: 1m 39s	remaining: 11m 7s
+1400:	learn: 0.2708764	test: 0.5454495	best: 0.5449622 (1311)	total: 1m 47s	remaining: 10m 59s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.5725076072
-bestIteration = 541
+bestTest = 0.5449621768
+bestIteration = 1311
 
-Shrink model to first 542 iterations.
-F1 score: 0.7538308115667687
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0343657	test: 1.0346296	best: 1.0346296 (0)	total: 490ms	remaining: 1h 21m 37s
-100:	learn: 0.1901331	test: 0.2020042	best: 0.2020042 (100)	total: 48.5s	remaining: 1h 19m 15s
-200:	learn: 0.1442629	test: 0.1706625	best: 0.1706625 (200)	total: 1m 36s	remaining: 1h 18m 12s
-300:	learn: 0.1232038	test: 0.1607478	best: 0.1607196 (299)	total: 2m 23s	remaining: 1h 17m 12s
-400:	learn: 0.1072922	test: 0.1558326	best: 0.1558149 (399)	total: 3m 11s	remaining: 1h 16m 18s
-500:	learn: 0.0950059	test: 0.1512717	best: 0.1512700 (499)	total: 3m 58s	remaining: 1h 15m 28s
-600:	learn: 0.0860841	test: 0.1487241	best: 0.1487241 (600)	total: 4m 45s	remaining: 1h 14m 30s
-700:	learn: 0.0789562	test: 0.1474054	best: 0.1473475 (692)	total: 5m 33s	remaining: 1h 13m 43s
-800:	learn: 0.0722020	test: 0.1461683	best: 0.1461660 (799)	total: 6m 21s	remaining: 1h 12m 57s
-900:	learn: 0.0663565	test: 0.1455901	best: 0.1455123 (879)	total: 7m 8s	remaining: 1h 12m 7s
-1000:	learn: 0.0616453	test: 0.1455424	best: 0.1453999 (993)	total: 7m 56s	remaining: 1h 11m 20s
-1100:	learn: 0.0573359	test: 0.1455830	best: 0.1452726 (1024)	total: 8m 43s	remaining: 1h 10m 34s
-1200:	learn: 0.0536677	test: 0.1453573	best: 0.1451519 (1172)	total: 9m 31s	remaining: 1h 9m 47s
+Shrink model to first 1312 iterations.
+Features importance...
+          imp                   feature
+0    0.103557             crashdump_cnt
+1    0.114145                 venus_cnt
+2    0.156502                    w2v_48
+3    0.162874         time_diffs_min_2h
+4    0.174133  tmp_appearance_3_percent
+..        ...                       ...
+115  3.587104          tmp_appearance_1
+116  3.800433          last_template_id
+117  3.887471          tmp_appearance_2
+118  5.128093            second_span_2h
+119  7.042447              server_model
+
+[120 rows x 2 columns]
+F1 score: 0.756382835518036
+F1 score: 0.6430794498258711
+2 {0: 1.1365987222391238, 1: 0.8927120669056153}
+0:	learn: 0.6567707	test: 0.6579508	best: 0.6579508 (0)	total: 78.7ms	remaining: 13m 6s
+100:	learn: 0.1582632	test: 0.1678207	best: 0.1678207 (100)	total: 8.63s	remaining: 14m 6s
+200:	learn: 0.1213793	test: 0.1460456	best: 0.1460456 (200)	total: 17.2s	remaining: 13m 56s
+300:	learn: 0.1023888	test: 0.1384187	best: 0.1384187 (300)	total: 25.6s	remaining: 13m 44s
+400:	learn: 0.0874743	test: 0.1336815	best: 0.1336815 (400)	total: 34s	remaining: 13m 34s
+500:	learn: 0.0756026	test: 0.1297934	best: 0.1297827 (499)	total: 42.4s	remaining: 13m 23s
+600:	learn: 0.0661622	test: 0.1280931	best: 0.1280931 (600)	total: 50.8s	remaining: 13m 13s
+700:	learn: 0.0588592	test: 0.1269717	best: 0.1269717 (700)	total: 59.1s	remaining: 13m 4s
+800:	learn: 0.0530121	test: 0.1263013	best: 0.1262716 (798)	total: 1m 7s	remaining: 12m 54s
+900:	learn: 0.0476496	test: 0.1253629	best: 0.1253629 (900)	total: 1m 15s	remaining: 12m 45s
+1000:	learn: 0.0434687	test: 0.1248724	best: 0.1248521 (999)	total: 1m 24s	remaining: 12m 36s
+1100:	learn: 0.0396939	test: 0.1248969	best: 0.1245097 (1051)	total: 1m 32s	remaining: 12m 27s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.1451519164
-bestIteration = 1172
+bestTest = 0.1245097131
+bestIteration = 1051
 
-Shrink model to first 1173 iterations.
-0.9151005475978811
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6908747	test: 0.6913217	best: 0.6913217 (0)	total: 57.8ms	remaining: 9m 37s
-100:	learn: 0.5784260	test: 0.6117625	best: 0.6117625 (100)	total: 7s	remaining: 11m 26s
-200:	learn: 0.5347953	test: 0.5993126	best: 0.5993126 (200)	total: 14s	remaining: 11m 23s
-300:	learn: 0.5041478	test: 0.5973557	best: 0.5968718 (259)	total: 21s	remaining: 11m 17s
+Shrink model to first 1052 iterations.
+Features importance...
+          imp                   feature
+0    0.005319        max_continuous_msg
+1    0.044650             crashdump_cnt
+2    0.113888                    w2v_31
+3    0.133485                    w2v_45
+4    0.146287  msg_appearance_2_percent
+..        ...                       ...
+115  3.318961              server_model
+116  4.428682          last_template_id
+117  4.826999       second_span_mean_2h
+118  9.026030                     tfv_0
+119  9.924054            second_span_2h
+
+[120 rows x 2 columns]
+0.9521246622326146
+3 {0: 1.646381167042324, 1: 0.7194134383891442, 3: 0.9974207252313761}
+0:	learn: 1.0892200	test: 1.0902634	best: 1.0902634 (0)	total: 78.3ms	remaining: 13m 2s
+100:	learn: 0.6738541	test: 0.7160502	best: 0.7160502 (100)	total: 7.76s	remaining: 12m 40s
+200:	learn: 0.5634395	test: 0.6376771	best: 0.6376771 (200)	total: 15.4s	remaining: 12m 33s
+300:	learn: 0.5056784	test: 0.6094341	best: 0.6094341 (300)	total: 23.1s	remaining: 12m 23s
+400:	learn: 0.4658003	test: 0.5961685	best: 0.5961685 (400)	total: 30.7s	remaining: 12m 14s
+500:	learn: 0.4341737	test: 0.5871946	best: 0.5871946 (500)	total: 38.3s	remaining: 12m 6s
+600:	learn: 0.4089720	test: 0.5824603	best: 0.5824155 (592)	total: 46s	remaining: 11m 59s
+700:	learn: 0.3862359	test: 0.5803452	best: 0.5803452 (700)	total: 53.7s	remaining: 11m 52s
+800:	learn: 0.3654797	test: 0.5785416	best: 0.5782714 (788)	total: 1m 1s	remaining: 11m 45s
+900:	learn: 0.3468296	test: 0.5773402	best: 0.5772989 (890)	total: 1m 9s	remaining: 11m 38s
+1000:	learn: 0.3307534	test: 0.5765870	best: 0.5765870 (1000)	total: 1m 16s	remaining: 11m 30s
+1100:	learn: 0.3149281	test: 0.5763385	best: 0.5759624 (1040)	total: 1m 24s	remaining: 11m 22s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.5968718457
-bestIteration = 259
+bestTest = 0.5759623589
+bestIteration = 1040
 
-Shrink model to first 260 iterations.
-F1 score: 0.7404338896841751
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0368331	test: 1.0372339	best: 1.0372339 (0)	total: 485ms	remaining: 1h 20m 46s
-100:	learn: 0.1867614	test: 0.2054906	best: 0.2054906 (100)	total: 48.8s	remaining: 1h 19m 46s
-200:	learn: 0.1408150	test: 0.1814271	best: 0.1814271 (200)	total: 1m 36s	remaining: 1h 18m 42s
-300:	learn: 0.1194269	test: 0.1743025	best: 0.1743025 (300)	total: 2m 24s	remaining: 1h 17m 45s
-400:	learn: 0.1047386	test: 0.1709455	best: 0.1709455 (400)	total: 3m 12s	remaining: 1h 16m 50s
-500:	learn: 0.0923056	test: 0.1700850	best: 0.1696478 (477)	total: 4m	remaining: 1h 16m
-600:	learn: 0.0824401	test: 0.1691092	best: 0.1687412 (558)	total: 4m 48s	remaining: 1h 15m 11s
+Shrink model to first 1041 iterations.
+Features importance...
+          imp              feature
+0    0.097915            venus_cnt
+1    0.117361        crashdump_cnt
+2    0.129452    time_diffs_min_2h
+3    0.165974  max_continuous_time
+4    0.188118               w2v_38
+..        ...                  ...
+115  3.899746     last_template_id
+116  4.315623       second_span_2h
+117  4.410315     tmp_appearance_2
+118  4.640150     tmp_appearance_1
+119  7.287607         server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7409336587167368
+F1 score: 0.617574399045569
+2 {0: 1.1362530413625305, 1: 0.892925430210325}
+0:	learn: 0.6567612	test: 0.6555294	best: 0.6555294 (0)	total: 75.9ms	remaining: 12m 39s
+100:	learn: 0.1567011	test: 0.1688102	best: 0.1688102 (100)	total: 8.66s	remaining: 14m 9s
+200:	learn: 0.1207189	test: 0.1473578	best: 0.1473578 (200)	total: 17.2s	remaining: 13m 59s
+300:	learn: 0.1015074	test: 0.1377523	best: 0.1377523 (300)	total: 25.5s	remaining: 13m 42s
+400:	learn: 0.0875904	test: 0.1329759	best: 0.1329484 (398)	total: 34s	remaining: 13m 33s
+500:	learn: 0.0756595	test: 0.1283870	best: 0.1283870 (500)	total: 42.4s	remaining: 13m 23s
+600:	learn: 0.0664153	test: 0.1260578	best: 0.1260285 (598)	total: 50.7s	remaining: 13m 13s
+700:	learn: 0.0586578	test: 0.1240534	best: 0.1239464 (695)	total: 59.1s	remaining: 13m 4s
+800:	learn: 0.0521731	test: 0.1226477	best: 0.1226477 (800)	total: 1m 7s	remaining: 12m 55s
+900:	learn: 0.0468929	test: 0.1215228	best: 0.1215228 (900)	total: 1m 15s	remaining: 12m 46s
+1000:	learn: 0.0426967	test: 0.1206842	best: 0.1206842 (1000)	total: 1m 24s	remaining: 12m 36s
+1100:	learn: 0.0388265	test: 0.1197199	best: 0.1195847 (1085)	total: 1m 32s	remaining: 12m 27s
+1200:	learn: 0.0357311	test: 0.1193859	best: 0.1193207 (1188)	total: 1m 40s	remaining: 12m 18s
+1300:	learn: 0.0328775	test: 0.1191440	best: 0.1191290 (1290)	total: 1m 49s	remaining: 12m 9s
+1400:	learn: 0.0302292	test: 0.1188831	best: 0.1187937 (1369)	total: 1m 57s	remaining: 12m
+1500:	learn: 0.0277180	test: 0.1192079	best: 0.1187350 (1416)	total: 2m 5s	remaining: 11m 52s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.168741227
-bestIteration = 558
+bestTest = 0.1187349809
+bestIteration = 1416
 
-Shrink model to first 559 iterations.
-0.9001176073778083
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6910630	test: 0.6915155	best: 0.6915155 (0)	total: 61.4ms	remaining: 10m 13s
-100:	learn: 0.5758885	test: 0.6291665	best: 0.6291665 (100)	total: 7.02s	remaining: 11m 28s
-200:	learn: 0.5287396	test: 0.6202975	best: 0.6202975 (200)	total: 14s	remaining: 11m 23s
-300:	learn: 0.4987801	test: 0.6184305	best: 0.6184305 (300)	total: 21s	remaining: 11m 17s
-400:	learn: 0.4751806	test: 0.6172410	best: 0.6172410 (400)	total: 28.1s	remaining: 11m 11s
-500:	learn: 0.4533232	test: 0.6180180	best: 0.6169290 (416)	total: 35.1s	remaining: 11m 5s
+Shrink model to first 1417 iterations.
+Features importance...
+           imp                   feature
+0     0.035840             crashdump_cnt
+1     0.118719  msg_appearance_2_percent
+2     0.152133  tmp_appearance_2_percent
+3     0.169833                    w2v_45
+4     0.171451                    w2v_27
+..         ...                       ...
+115   3.368841              server_model
+116   4.313359          last_template_id
+117   4.826536       second_span_mean_2h
+118   9.139068                     tfv_0
+119  10.316145            second_span_2h
+
+[120 rows x 2 columns]
+0.9526822346630951
+3 {0: 1.6530920060331824, 1: 0.7201051248357424, 3: 0.9936536718041704}
+0:	learn: 1.0892290	test: 1.0899394	best: 1.0899394 (0)	total: 76.8ms	remaining: 12m 48s
+100:	learn: 0.6729557	test: 0.7156408	best: 0.7156408 (100)	total: 7.86s	remaining: 12m 50s
+200:	learn: 0.5589665	test: 0.6395519	best: 0.6395519 (200)	total: 15.6s	remaining: 12m 42s
+300:	learn: 0.5026167	test: 0.6121181	best: 0.6121181 (300)	total: 23.2s	remaining: 12m 28s
+400:	learn: 0.4642576	test: 0.5987290	best: 0.5987290 (400)	total: 30.9s	remaining: 12m 19s
+500:	learn: 0.4345633	test: 0.5905920	best: 0.5905878 (499)	total: 38.5s	remaining: 12m 9s
+600:	learn: 0.4089203	test: 0.5840477	best: 0.5839947 (599)	total: 46.2s	remaining: 12m 2s
+700:	learn: 0.3869657	test: 0.5808912	best: 0.5807874 (698)	total: 53.9s	remaining: 11m 54s
+800:	learn: 0.3656838	test: 0.5777674	best: 0.5777674 (800)	total: 1m 1s	remaining: 11m 46s
+900:	learn: 0.3463149	test: 0.5758330	best: 0.5757314 (899)	total: 1m 9s	remaining: 11m 38s
+1000:	learn: 0.3298606	test: 0.5745838	best: 0.5745736 (997)	total: 1m 16s	remaining: 11m 31s
+1100:	learn: 0.3145767	test: 0.5735557	best: 0.5735557 (1100)	total: 1m 24s	remaining: 11m 23s
+1200:	learn: 0.2995023	test: 0.5721073	best: 0.5720566 (1189)	total: 1m 32s	remaining: 11m 15s
+1300:	learn: 0.2852780	test: 0.5717127	best: 0.5717127 (1300)	total: 1m 39s	remaining: 11m 7s
+1400:	learn: 0.2711393	test: 0.5703672	best: 0.5701790 (1379)	total: 1m 47s	remaining: 10m 59s
+1500:	learn: 0.2587956	test: 0.5697655	best: 0.5693613 (1481)	total: 1m 55s	remaining: 10m 51s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.6169290443
-bestIteration = 416
+bestTest = 0.5693613355
+bestIteration = 1481
 
-Shrink model to first 417 iterations.
-F1 score: 0.721938197689223
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0355084	test: 1.0377028	best: 1.0377028 (0)	total: 493ms	remaining: 1h 22m 13s
-100:	learn: 0.1882471	test: 0.2152354	best: 0.2152354 (100)	total: 48.9s	remaining: 1h 19m 56s
-200:	learn: 0.1415267	test: 0.1858748	best: 0.1858748 (200)	total: 1m 37s	remaining: 1h 18m 49s
-300:	learn: 0.1198526	test: 0.1758651	best: 0.1758651 (300)	total: 2m 25s	remaining: 1h 17m 52s
-400:	learn: 0.1052547	test: 0.1712047	best: 0.1712047 (400)	total: 3m 12s	remaining: 1h 16m 56s
-500:	learn: 0.0941667	test: 0.1686974	best: 0.1686974 (500)	total: 4m	remaining: 1h 15m 56s
-600:	learn: 0.0848653	test: 0.1669799	best: 0.1668138 (595)	total: 4m 48s	remaining: 1h 15m 10s
-700:	learn: 0.0770458	test: 0.1659758	best: 0.1659506 (699)	total: 5m 36s	remaining: 1h 14m 21s
-800:	learn: 0.0705126	test: 0.1655212	best: 0.1655212 (800)	total: 6m 24s	remaining: 1h 13m 35s
-900:	learn: 0.0650116	test: 0.1652336	best: 0.1649633 (880)	total: 7m 12s	remaining: 1h 12m 47s
-1000:	learn: 0.0600783	test: 0.1652602	best: 0.1648820 (955)	total: 8m	remaining: 1h 11m 59s
+Shrink model to first 1482 iterations.
+Features importance...
+          imp            feature
+0    0.105089          venus_cnt
+1    0.122019      crashdump_cnt
+2    0.132510  time_diffs_min_2h
+3    0.167837             w2v_48
+4    0.188095             w2v_11
+..        ...                ...
+115  3.687952   tmp_appearance_2
+116  3.736367   last_template_id
+117  4.394534   tmp_appearance_1
+118  4.823427     second_span_2h
+119  6.798157       server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7433386266708863
+F1 score: 0.6224505629461428
+2 {0: 1.1425076452599388, 1: 0.8891004283674441}
+0:	learn: 0.6557295	test: 0.6568090	best: 0.6568090 (0)	total: 76.6ms	remaining: 12m 45s
+100:	learn: 0.1550461	test: 0.1676029	best: 0.1676029 (100)	total: 8.69s	remaining: 14m 11s
+200:	learn: 0.1207939	test: 0.1478649	best: 0.1478649 (200)	total: 17.1s	remaining: 13m 54s
+300:	learn: 0.0999876	test: 0.1405751	best: 0.1405751 (300)	total: 25.6s	remaining: 13m 43s
+400:	learn: 0.0852952	test: 0.1362713	best: 0.1362713 (400)	total: 34s	remaining: 13m 33s
+500:	learn: 0.0748516	test: 0.1336063	best: 0.1336063 (500)	total: 42.4s	remaining: 13m 23s
+600:	learn: 0.0655859	test: 0.1313564	best: 0.1313564 (600)	total: 50.7s	remaining: 13m 12s
+700:	learn: 0.0585744	test: 0.1309565	best: 0.1308455 (680)	total: 59s	remaining: 13m 2s
+800:	learn: 0.0522093	test: 0.1303070	best: 0.1302959 (799)	total: 1m 7s	remaining: 12m 53s
+900:	learn: 0.0470268	test: 0.1301244	best: 0.1300548 (891)	total: 1m 15s	remaining: 12m 43s
+1000:	learn: 0.0423821	test: 0.1300375	best: 0.1297287 (975)	total: 1m 23s	remaining: 12m 34s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.1648820203
-bestIteration = 955
+bestTest = 0.1297287337
+bestIteration = 975
 
-Shrink model to first 956 iterations.
-0.9103602464077621
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6910154	test: 0.6910801	best: 0.6910801 (0)	total: 57.5ms	remaining: 9m 34s
-100:	learn: 0.5782207	test: 0.6032973	best: 0.6032973 (100)	total: 7s	remaining: 11m 25s
-200:	learn: 0.5321092	test: 0.5850837	best: 0.5850837 (200)	total: 14s	remaining: 11m 20s
-300:	learn: 0.5009559	test: 0.5817075	best: 0.5815944 (290)	total: 20.9s	remaining: 11m 14s
-400:	learn: 0.4780611	test: 0.5793814	best: 0.5792691 (397)	total: 27.9s	remaining: 11m 6s
-500:	learn: 0.4576249	test: 0.5788748	best: 0.5785800 (493)	total: 34.8s	remaining: 10m 59s
-600:	learn: 0.4380548	test: 0.5785315	best: 0.5781897 (582)	total: 41.8s	remaining: 10m 53s
+Shrink model to first 976 iterations.
+Features importance...
+           imp                   feature
+0     0.032268             crashdump_cnt
+1     0.113980                    w2v_53
+2     0.120570                     w2v_6
+3     0.147793                    w2v_47
+4     0.164406  msg_appearance_2_percent
+..         ...                       ...
+115   3.486776          tmp_appearance_1
+116   4.445593       second_span_mean_2h
+117   4.645346          last_template_id
+118   9.182978                     tfv_0
+119  10.198418            second_span_2h
+
+[120 rows x 2 columns]
+0.9483089403552579
+3 {0: 1.646525679758308, 1: 0.7138179436804192, 3: 1.0083256244218317}
+0:	learn: 1.0888119	test: 1.0888530	best: 1.0888530 (0)	total: 79.7ms	remaining: 13m 16s
+100:	learn: 0.6753500	test: 0.6913445	best: 0.6913445 (100)	total: 7.8s	remaining: 12m 44s
+200:	learn: 0.5661272	test: 0.6110867	best: 0.6110867 (200)	total: 15.6s	remaining: 12m 38s
+300:	learn: 0.5080212	test: 0.5789370	best: 0.5789370 (300)	total: 23.2s	remaining: 12m 27s
+400:	learn: 0.4687371	test: 0.5627822	best: 0.5627822 (400)	total: 30.9s	remaining: 12m 18s
+500:	learn: 0.4391787	test: 0.5537304	best: 0.5537304 (500)	total: 38.4s	remaining: 12m 7s
+600:	learn: 0.4138079	test: 0.5481005	best: 0.5481005 (600)	total: 46.1s	remaining: 12m
+700:	learn: 0.3896274	test: 0.5433747	best: 0.5433747 (700)	total: 53.8s	remaining: 11m 53s
+800:	learn: 0.3688877	test: 0.5394626	best: 0.5394626 (800)	total: 1m 1s	remaining: 11m 45s
+900:	learn: 0.3497992	test: 0.5370089	best: 0.5370089 (900)	total: 1m 9s	remaining: 11m 38s
+1000:	learn: 0.3314823	test: 0.5355229	best: 0.5355119 (998)	total: 1m 16s	remaining: 11m 30s
+1100:	learn: 0.3144638	test: 0.5335940	best: 0.5335940 (1100)	total: 1m 24s	remaining: 11m 22s
+1200:	learn: 0.2989470	test: 0.5331715	best: 0.5329668 (1128)	total: 1m 32s	remaining: 11m 14s
+1300:	learn: 0.2840699	test: 0.5314633	best: 0.5314622 (1299)	total: 1m 39s	remaining: 11m 7s
+1400:	learn: 0.2709451	test: 0.5310880	best: 0.5307895 (1364)	total: 1m 47s	remaining: 10m 58s
+1500:	learn: 0.2585374	test: 0.5302456	best: 0.5301633 (1491)	total: 1m 54s	remaining: 10m 50s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.5781896793
-bestIteration = 582
+bestTest = 0.5301632648
+bestIteration = 1491
 
-Shrink model to first 583 iterations.
-F1 score: 0.7644595272654704
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0379596	test: 1.0390501	best: 1.0390501 (0)	total: 489ms	remaining: 1h 21m 27s
-100:	learn: 0.1854578	test: 0.2192339	best: 0.2192339 (100)	total: 49.1s	remaining: 1h 20m 14s
-200:	learn: 0.1411274	test: 0.1912959	best: 0.1912959 (200)	total: 1m 37s	remaining: 1h 19m 26s
-300:	learn: 0.1193627	test: 0.1830101	best: 0.1830101 (300)	total: 2m 25s	remaining: 1h 18m 14s
-400:	learn: 0.1048252	test: 0.1786409	best: 0.1786409 (400)	total: 3m 13s	remaining: 1h 17m 14s
-500:	learn: 0.0927694	test: 0.1749163	best: 0.1749163 (500)	total: 4m 1s	remaining: 1h 16m 23s
-600:	learn: 0.0830978	test: 0.1724061	best: 0.1722496 (599)	total: 4m 49s	remaining: 1h 15m 30s
-700:	learn: 0.0755244	test: 0.1707637	best: 0.1706960 (698)	total: 5m 37s	remaining: 1h 14m 38s
-800:	learn: 0.0692945	test: 0.1704546	best: 0.1704073 (776)	total: 6m 25s	remaining: 1h 13m 46s
-900:	learn: 0.0637811	test: 0.1706257	best: 0.1702597 (842)	total: 7m 13s	remaining: 1h 12m 58s
+Shrink model to first 1492 iterations.
+Features importance...
+          imp              feature
+0    0.115571    time_diffs_min_2h
+1    0.128845            venus_cnt
+2    0.171988        crashdump_cnt
+3    0.186109               w2v_17
+4    0.199867  max_continuous_time
+..        ...                  ...
+115  3.494493     last_template_id
+116  3.832180     tmp_appearance_1
+117  3.916428     tmp_appearance_2
+118  4.884106       second_span_2h
+119  6.132298         server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7645190851760459
+F1 score: 0.6578140152154078
+2 {0: 1.137983551629607, 1: 0.8918596323704941}
+0:	learn: 0.6530532	test: 0.6548115	best: 0.6548115 (0)	total: 76.6ms	remaining: 12m 45s
+100:	learn: 0.1545074	test: 0.1853080	best: 0.1853080 (100)	total: 8.66s	remaining: 14m 8s
+200:	learn: 0.1207800	test: 0.1637947	best: 0.1637947 (200)	total: 17.1s	remaining: 13m 55s
+300:	learn: 0.1001003	test: 0.1536977	best: 0.1536977 (300)	total: 25.6s	remaining: 13m 45s
+400:	learn: 0.0860217	test: 0.1488036	best: 0.1488036 (400)	total: 34.1s	remaining: 13m 35s
+500:	learn: 0.0745068	test: 0.1446139	best: 0.1445896 (499)	total: 42.6s	remaining: 13m 27s
+600:	learn: 0.0655302	test: 0.1416349	best: 0.1415536 (597)	total: 51s	remaining: 13m 17s
+700:	learn: 0.0580013	test: 0.1390109	best: 0.1390109 (700)	total: 59.4s	remaining: 13m 7s
+800:	learn: 0.0520845	test: 0.1373926	best: 0.1373710 (797)	total: 1m 7s	remaining: 12m 58s
+900:	learn: 0.0468077	test: 0.1367808	best: 0.1366874 (885)	total: 1m 16s	remaining: 12m 48s
+1000:	learn: 0.0420696	test: 0.1358491	best: 0.1358491 (1000)	total: 1m 24s	remaining: 12m 39s
+1100:	learn: 0.0383142	test: 0.1356315	best: 0.1354511 (1044)	total: 1m 32s	remaining: 12m 29s
+1200:	learn: 0.0351432	test: 0.1354606	best: 0.1353926 (1194)	total: 1m 41s	remaining: 12m 20s
+1300:	learn: 0.0322694	test: 0.1353861	best: 0.1351737 (1224)	total: 1m 49s	remaining: 12m 11s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.1702597074
-bestIteration = 842
+bestTest = 0.1351737257
+bestIteration = 1224
 
-Shrink model to first 843 iterations.
-0.9036284549115985
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6914098	test: 0.6917093	best: 0.6917093 (0)	total: 60.4ms	remaining: 10m 3s
-100:	learn: 0.5753259	test: 0.6218391	best: 0.6218391 (100)	total: 6.95s	remaining: 11m 21s
-200:	learn: 0.5280798	test: 0.6140427	best: 0.6133306 (185)	total: 14s	remaining: 11m 22s
+Shrink model to first 1225 iterations.
+Features importance...
+          imp              feature
+0    0.006784          last_msg_id
+1    0.052531        crashdump_cnt
+2    0.098766               w2v_47
+3    0.166646               w2v_50
+4    0.183898               w2v_53
+..        ...                  ...
+115  2.945783         server_model
+116  4.573140     last_template_id
+117  4.875150  second_span_mean_2h
+118  8.998862                tfv_0
+119  9.744288       second_span_2h
+
+[120 rows x 2 columns]
+0.9473983634391359
+3 {0: 1.6618577575297393, 1: 0.7133854845719253, 3: 1.0035152070915483}
+0:	learn: 1.0887847	test: 1.0895938	best: 1.0895938 (0)	total: 77.3ms	remaining: 12m 52s
+100:	learn: 0.6667027	test: 0.7158562	best: 0.7158562 (100)	total: 7.88s	remaining: 12m 51s
+200:	learn: 0.5580422	test: 0.6435458	best: 0.6435458 (200)	total: 15.6s	remaining: 12m 40s
+300:	learn: 0.5004811	test: 0.6156470	best: 0.6156470 (300)	total: 23.3s	remaining: 12m 30s
+400:	learn: 0.4619157	test: 0.6036732	best: 0.6036732 (400)	total: 31s	remaining: 12m 20s
+500:	learn: 0.4307945	test: 0.5956464	best: 0.5956464 (500)	total: 38.6s	remaining: 12m 11s
+600:	learn: 0.4040362	test: 0.5916786	best: 0.5916786 (600)	total: 46.3s	remaining: 12m 4s
+700:	learn: 0.3805919	test: 0.5880372	best: 0.5880372 (700)	total: 54s	remaining: 11m 56s
+800:	learn: 0.3591860	test: 0.5866634	best: 0.5863615 (783)	total: 1m 1s	remaining: 11m 48s
+900:	learn: 0.3410050	test: 0.5853066	best: 0.5850192 (881)	total: 1m 9s	remaining: 11m 40s
+1000:	learn: 0.3241770	test: 0.5845397	best: 0.5842911 (961)	total: 1m 17s	remaining: 11m 32s
+1100:	learn: 0.3082389	test: 0.5850850	best: 0.5841927 (1019)	total: 1m 24s	remaining: 11m 24s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.6133305849
-bestIteration = 185
+bestTest = 0.5841926907
+bestIteration = 1019
 
-Shrink model to first 186 iterations.
-F1 score: 0.748088339914621
-3 {0: 0.7142857142857143, 1: 0.14285714285714285, 2: 0.14285714285714285}
-0:	learn: 1.0377704	test: 1.0378622	best: 1.0378622 (0)	total: 489ms	remaining: 1h 21m 31s
-100:	learn: 0.1862214	test: 0.2297322	best: 0.2297322 (100)	total: 48.9s	remaining: 1h 19m 52s
-200:	learn: 0.1423665	test: 0.2020584	best: 0.2020584 (200)	total: 1m 36s	remaining: 1h 18m 46s
-300:	learn: 0.1197497	test: 0.1930862	best: 0.1930746 (299)	total: 2m 24s	remaining: 1h 17m 50s
-400:	learn: 0.1045439	test: 0.1885995	best: 0.1885210 (396)	total: 3m 12s	remaining: 1h 16m 53s
-500:	learn: 0.0924109	test: 0.1854399	best: 0.1854399 (500)	total: 4m	remaining: 1h 16m 3s
-600:	learn: 0.0832060	test: 0.1831751	best: 0.1830863 (592)	total: 4m 48s	remaining: 1h 15m 14s
-700:	learn: 0.0756963	test: 0.1827004	best: 0.1822994 (675)	total: 5m 36s	remaining: 1h 14m 26s
+Shrink model to first 1020 iterations.
+Features importance...
+          imp            feature
+0    0.088181          venus_cnt
+1    0.106795      crashdump_cnt
+2    0.162944  time_diffs_min_2h
+3    0.190610             w2v_42
+4    0.195086             w2v_48
+..        ...                ...
+115  3.506835   tmp_appearance_1
+116  4.221425   last_template_id
+117  4.465729   tmp_appearance_2
+118  4.888383     second_span_2h
+119  7.446286       server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7552160791030298
+F1 score: 0.6472695019010087
+2 {0: 1.1402411109415536, 1: 0.8904778929805744}
+0:	learn: 0.6554808	test: 0.6564707	best: 0.6564707 (0)	total: 76.3ms	remaining: 12m 42s
+100:	learn: 0.1540284	test: 0.1869559	best: 0.1869559 (100)	total: 8.62s	remaining: 14m 5s
+200:	learn: 0.1185196	test: 0.1703844	best: 0.1703844 (200)	total: 17.2s	remaining: 13m 58s
+300:	learn: 0.0983978	test: 0.1628660	best: 0.1628660 (300)	total: 25.8s	remaining: 13m 50s
+400:	learn: 0.0842483	test: 0.1585381	best: 0.1585381 (400)	total: 34.3s	remaining: 13m 40s
+500:	learn: 0.0725719	test: 0.1565309	best: 0.1564358 (498)	total: 42.7s	remaining: 13m 29s
+600:	learn: 0.0637485	test: 0.1556136	best: 0.1554390 (591)	total: 51.1s	remaining: 13m 19s
+700:	learn: 0.0564505	test: 0.1544313	best: 0.1543808 (697)	total: 59.5s	remaining: 13m 9s
+800:	learn: 0.0508432	test: 0.1546845	best: 0.1542098 (744)	total: 1m 7s	remaining: 12m 59s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.1822994306
-bestIteration = 675
+bestTest = 0.1542098094
+bestIteration = 744
 
-Shrink model to first 676 iterations.
-0.8872694157456191
-2 {0: 0.42857142857142855, 1: 0.2857142857142857}
-0:	learn: 0.6908158	test: 0.6915434	best: 0.6915434 (0)	total: 59.2ms	remaining: 9m 51s
-100:	learn: 0.5740503	test: 0.6151966	best: 0.6151966 (100)	total: 7s	remaining: 11m 26s
-200:	learn: 0.5287495	test: 0.6032236	best: 0.6030864 (195)	total: 14s	remaining: 11m 21s
-300:	learn: 0.4974134	test: 0.6018527	best: 0.6013986 (256)	total: 21s	remaining: 11m 15s
+Shrink model to first 745 iterations.
+Features importance...
+           imp              feature
+0     0.050174        crashdump_cnt
+1     0.104767               w2v_44
+2     0.147462               w2v_47
+3     0.160478               w2v_52
+4     0.162956               tfv_13
+..         ...                  ...
+115   2.945886         server_model
+116   4.156176  second_span_mean_2h
+117   5.162320     last_template_id
+118   9.591145                tfv_0
+119  10.646013       second_span_2h
+
+[120 rows x 2 columns]
+0.9456196667318171
+3 {0: 1.6325361235675138, 1: 0.7194773825208608, 3: 1.0024476059354444}
+0:	learn: 1.0885957	test: 1.0890250	best: 1.0890250 (0)	total: 78.5ms	remaining: 13m 4s
+100:	learn: 0.6677293	test: 0.7106171	best: 0.7106171 (100)	total: 7.91s	remaining: 12m 54s
+200:	learn: 0.5575219	test: 0.6400437	best: 0.6400437 (200)	total: 15.7s	remaining: 12m 43s
+300:	learn: 0.4997457	test: 0.6147286	best: 0.6147286 (300)	total: 23.4s	remaining: 12m 33s
+400:	learn: 0.4609686	test: 0.6014129	best: 0.6014129 (400)	total: 31s	remaining: 12m 22s
+500:	learn: 0.4303645	test: 0.5946882	best: 0.5946882 (500)	total: 38.7s	remaining: 12m 14s
+600:	learn: 0.4044644	test: 0.5899825	best: 0.5899706 (597)	total: 46.3s	remaining: 12m 4s
+700:	learn: 0.3819131	test: 0.5867446	best: 0.5867446 (700)	total: 54.1s	remaining: 11m 57s
+800:	learn: 0.3622290	test: 0.5853350	best: 0.5851841 (791)	total: 1m 1s	remaining: 11m 47s
+900:	learn: 0.3442446	test: 0.5842819	best: 0.5841287 (883)	total: 1m 9s	remaining: 11m 40s
 Stopped by overfitting detector  (100 iterations wait)
 
-bestTest = 0.6013985732
-bestIteration = 256
+bestTest = 0.5841286633
+bestIteration = 883
 
-Shrink model to first 257 iterations.
-F1 score: 0.7290753140136337
+Shrink model to first 884 iterations.
+Features importance...
+          imp              feature
+0    0.080694    time_diffs_min_2h
+1    0.106656            venus_cnt
+2    0.137184        crashdump_cnt
+3    0.163666  max_continuous_time
+4    0.207888               w2v_54
+..        ...                  ...
+115  4.076518     last_template_id
+116  4.246624     tmp_appearance_1
+117  4.287500     tmp_appearance_2
+118  5.127891       second_span_2h
+119  8.111424         server_model
+
+[120 rows x 2 columns]
+F1 score: 0.7295088803533856
+F1 score: 0.5966438586629621
               precision    recall  f1-score   support
 
-           0       0.46      0.38      0.42      1476
-           1       0.67      0.85      0.75      3387
-           2       0.97      0.93      0.95      9320
-           3       0.91      0.82      0.86      2421
+           0       0.47      0.45      0.46      1476
+           1       0.72      0.72      0.72      3387
+           2       0.96      0.95      0.96      9320
+           3       0.84      0.90      0.87      2421
 
     accuracy                           0.85     16604
-   macro avg       0.75      0.74      0.74     16604
+   macro avg       0.75      0.75      0.75     16604
 weighted avg       0.85      0.85      0.85     16604
 
-0.651016352404821
-2    0.526073
-1    0.220792
-3    0.188449
-0    0.064686
+0.6370479114302147
+2    0.735974
+1    0.185149
+0    0.078878
 Name: label, dtype: float64
 2    0.561311
 1    0.203987

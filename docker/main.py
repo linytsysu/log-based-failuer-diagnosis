@@ -34,18 +34,40 @@ print(df_train.shape, df_test.shape)
 # df_train = pd.concat([df_train, bert_train.iloc[:, 8:]], axis=1)
 # df_test = pd.concat([df_test, bert_test.iloc[:, 8:]], axis=1)
 
-df_train2 = pd.read_csv('train2.csv')
-df_test2 = pd.read_csv('test2.csv')
+# df_train2 = pd.read_csv('train2.csv')
+# df_test2 = pd.read_csv('test2.csv')
 
-df_train = df_train.merge(df_train2, on=['sn', 'fault_time', 'label'])
-df_test = df_test.merge(df_test2, on=['sn', 'fault_time'])
+# df_train = df_train.merge(df_train2, on=['sn', 'fault_time', 'label'])
+# df_test = df_test.merge(df_test2, on=['sn', 'fault_time'])
 
-print(df_train.shape, df_test.shape)
+# print(df_train2.shape, df_test2.shape)
 
-for name in ['last_msg_id', 'last_template_id', 'tmp_appearance_1', 'tmp_appearance_2', 'tmp_appearance_3',
-             'msg_appearance_1', 'msg_appearance_2', 'msg_appearance_3', 'max_continuous_msg']:
-    df_train[name] = df_train[name].fillna('NULL')
-    df_test[name] = df_test[name].fillna('NULL')
+for name in ['server_model', 'last_msg_id', 'last_template_id', 'tmp_appearance_1', 'tmp_appearance_2',
+             'tmp_appearance_3', 'msg_appearance_1', 'msg_appearance_2', 'msg_appearance_3', 'max_continuous_msg']:
+    df_train[name] = df_train[name].fillna('MISSING')
+    df_test[name] = df_test[name].fillna('MISSING')
+
+def macro_f1(y_true, y_pred) -> float:
+    """
+    计算得分
+    :param target_df: [sn,fault_time,label]
+    :param submit_df: [sn,fault_time,label]
+    :return:
+    """
+    weights =  [5  /  11,  4  /  11,  1  /  11,  1  /  11]
+    overall_df = pd.DataFrame([y_true, y_pred]).T
+    overall_df.columns = ['label_gt', 'label_pr']
+
+    macro_F1 =  0.
+    for i in  range(len(weights)):
+        TP =  len(overall_df[(overall_df['label_gt'] == i) & (overall_df['label_pr'] == i)])
+        FP =  len(overall_df[(overall_df['label_gt'] != i) & (overall_df['label_pr'] == i)])
+        FN =  len(overall_df[(overall_df['label_gt'] == i) & (overall_df['label_pr'] != i)])
+        precision = TP /  (TP + FP)  if  (TP + FP)  >  0  else  0
+        recall = TP /  (TP + FN)  if  (TP + FP)  >  0  else  0
+        F1 =  2  * precision * recall /  (precision + recall)  if  (precision + recall)  >  0  else  0
+        macro_F1 += weights[i]  * F1
+    return macro_F1
 
 def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
     NUM_CLASSES = y_train.nunique()
@@ -56,7 +78,7 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
     print(NUM_CLASSES, class_weights)
     params = {
         'task_type': 'CPU',
-        'bootstrap_type': 'Bernoulli',
+        'bootstrap_type': 'Bayesian',
         'learning_rate': 0.03 if mode == 'multiclass' else 0.01,
         'eval_metric': 'MultiClass',
         'loss_function': 'MultiClass',
@@ -66,7 +88,7 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
         'depth': 8,
         'leaf_estimation_iterations': 8,
         'reg_lambda': 5,
-        'subsample': 0.8,
+        # 'subsample': 0.8,
         'class_weights': class_weights,
         'early_stopping_rounds': 100,
         'cat_features': ['server_model', 'last_msg_id', 'last_template_id',
@@ -84,8 +106,6 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
 FOLDS = 10
 target = 'label'
 use_features = [col for col in df_train.columns if col not in ['sn', 'fault_time', target]]
-use_features1 = use_features
-use_features2 = use_features[:116]
 oof_pred = np.zeros((len(df_train),))
 
 y_pred1 = np.zeros((len(df_test), 3))
@@ -96,7 +116,7 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
     df_trian_sub = df_train.iloc[tr_ind].copy()
     df_valid_sub = df_train.iloc[val_ind].copy()
 
-    x_train1, x_val1 = df_trian_sub[use_features1], df_valid_sub[use_features1]
+    x_train1, x_val1 = df_trian_sub[use_features], df_valid_sub[use_features]
     y_train1, y_val1 = df_trian_sub[target], df_valid_sub[target]
     y_train1 = y_train1.apply(lambda x: 0 if x <= 1 else x-1)
     y_val1 = y_val1.apply(lambda x: 0 if x <= 1 else x-1)
@@ -109,14 +129,14 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
 
     print(f1_score(y_val1, model1.predict_proba(x_val1).argmax(axis=1), average='macro'))
 
-    x_train2, x_val2 = df_trian_sub[df_trian_sub['label'] <= 1][use_features2], \
-                       df_valid_sub[df_valid_sub['label'] <= 1][use_features2]
+    x_train2, x_val2 = df_trian_sub[df_trian_sub['label'] <= 1][use_features], \
+                       df_valid_sub[df_valid_sub['label'] <= 1][use_features]
     y_train2, y_val2 = df_trian_sub[df_trian_sub['label'] <= 1][target],\
                        df_valid_sub[df_valid_sub['label'] <= 1][target]
     model2 = cat_model_train(x_train2, y_train2, x_val2, y_val2, mode='binary')
 
-    y_pred1 += model1.predict_proba(df_test[use_features1]) / folds.n_splits
-    y_pred2 += model2.predict_proba(df_test[use_features2]) / folds.n_splits
+    y_pred1 += model1.predict_proba(df_test[use_features]) / folds.n_splits
+    y_pred2 += model2.predict_proba(df_test[use_features]) / folds.n_splits
 
     val_pred = []
     val_proba = model1.predict_proba(x_val1)
@@ -129,35 +149,15 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
 
     score = f1_score(df_valid_sub[target], val_pred, average='macro')
     print(f'F1 score: {score}')
+    score = macro_f1(df_valid_sub[target].values, val_pred)
+    print(f'F1 score: {score}')
 
     oof_pred[val_ind] = val_pred
 
 from sklearn.metrics import classification_report
 print(classification_report(df_train[target], oof_pred))
 
-def macro_f1(y_true, y_pred) -> float:
-    """
-    计算得分
-    :param target_df: [sn,fault_time,label]
-    :param submit_df: [sn,fault_time,label]
-    :return:
-    """
-    weights =  [3  /  7,  2  /  7,  1  /  7,  1  /  7]
-    overall_df = pd.DataFrame([y_true, y_pred]).T
-    overall_df.columns = ['label_gt', 'label_pr']
-
-    macro_F1 =  0.
-    for i in  range(len(weights)):
-        TP =  len(overall_df[(overall_df['label_gt'] == i) & (overall_df['label_pr'] == i)])
-        FP =  len(overall_df[(overall_df['label_gt'] != i) & (overall_df['label_pr'] == i)])
-        FN =  len(overall_df[(overall_df['label_gt'] == i) & (overall_df['label_pr'] != i)])
-        precision = TP /  (TP + FP)  if  (TP + FP)  >  0  else  0
-        recall = TP /  (TP + FN)  if  (TP + FP)  >  0  else  0
-        F1 =  2  * precision * recall /  (precision + recall)  if  (precision + recall)  >  0  else  0
-        macro_F1 += weights[i]  * F1
-    return macro_F1
-
-print(macro_f1(df_train[target], oof_pred))
+print(macro_f1(df_train[target].values, oof_pred))
 
 y_pred = []
 for i in range(y_pred1.shape[0]):
@@ -167,15 +167,9 @@ for i in range(y_pred1.shape[0]):
     else:
         y_pred.append(np.argmax(y_pred1[i])+1)
 
-submit_df = pd.read_csv('../data/preliminary_submit_dataset_b.csv')
+submit_df = pd.read_csv('/tcdata/final_submit_dataset_a.csv')
 sub = submit_df[['sn', 'fault_time']].copy()
 sub['label'] = y_pred
 print(sub['label'].value_counts() / sub.shape[0])
 
-label1 = pd.read_csv('../data/preliminary_train_label_dataset.csv')
-label2 = pd.read_csv('../data/preliminary_train_label_dataset_s.csv')
-label_df = pd.concat([label1, label2]).reset_index(drop=True)
-label_df = label_df.drop_duplicates().reset_index(drop=True)
-print(label_df['label'].value_counts() / label_df.shape[0])
-
-sub.to_csv('baseline3_gkf_sn_new.csv', index=False)
+sub.to_csv('./prediction_result/final_pred_a.csv', index=False)

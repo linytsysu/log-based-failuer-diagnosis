@@ -10,12 +10,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
 
-label1 = pd.read_csv('../data/preliminary_train_label_dataset.csv')
-label2 = pd.read_csv('../data/preliminary_train_label_dataset_s.csv')
+label1 = pd.read_csv('./data/preliminary_train_label_dataset.csv')
+label2 = pd.read_csv('./data/preliminary_train_label_dataset_s.csv')
 label_df = pd.concat([label1, label2]).reset_index(drop=True)
 label_df = label_df.drop_duplicates().reset_index(drop=True)
 
-submit_df = pd.read_csv('../data/preliminary_submit_dataset_b.csv')
+submit_df = pd.read_csv('/tcdata/final_submit_dataset_a.csv')
 
 log_df = pd.read_csv('./log_template.csv')
 log_df['msg_lower'] = log_df['msg_lower'].astype(str)

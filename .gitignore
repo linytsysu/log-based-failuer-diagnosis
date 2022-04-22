@@ -27,3 +27,5 @@ catboost_info
 
 /code/*.csv
 /bert2/*.csv
+
+/docker/data
