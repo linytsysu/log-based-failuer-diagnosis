@@ -79,6 +79,7 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
     params = {
         'task_type': 'CPU',
         'bootstrap_type': 'Bayesian',
+        'boosting_type': 'Plain',
         'learning_rate': 0.03 if mode == 'multiclass' else 0.01,
         'eval_metric': 'MultiClass',
         'loss_function': 'MultiClass',
@@ -127,22 +128,35 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
     # feat_imp.sort_values(by='imp').to_csv('%d_imp.csv'%fold, index=False)
     # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
 
+    trn_proba = model1.predict_proba(x_train1)
+    val_proba = model1.predict_proba(x_val1)
+
+    df_trian_sub['proba_0'] = trn_proba[:, 0]
+    df_trian_sub['proba_1'] = trn_proba[:, 1]
+    df_trian_sub['proba_2'] = trn_proba[:, 2]
+    df_valid_sub['proba_0'] = val_proba[:, 0]
+    df_valid_sub['proba_1'] = val_proba[:, 1]
+    df_valid_sub['proba_2'] = val_proba[:, 2]
+
     print(f1_score(y_val1, model1.predict_proba(x_val1).argmax(axis=1), average='macro'))
 
-    x_train2, x_val2 = df_trian_sub[df_trian_sub['label'] <= 1][use_features], \
-                       df_valid_sub[df_valid_sub['label'] <= 1][use_features]
+    x_train2, x_val2 = df_trian_sub[df_trian_sub['label'] <= 1][use_features + ['proba_0', 'proba_1', 'proba_2']], \
+                       df_valid_sub[df_valid_sub['label'] <= 1][use_features + ['proba_0', 'proba_1', 'proba_2']]
     y_train2, y_val2 = df_trian_sub[df_trian_sub['label'] <= 1][target],\
                        df_valid_sub[df_valid_sub['label'] <= 1][target]
     model2 = cat_model_train(x_train2, y_train2, x_val2, y_val2, mode='binary')
 
     y_pred1 += model1.predict_proba(df_test[use_features]) / folds.n_splits
-    y_pred2 += model2.predict_proba(df_test[use_features]) / folds.n_splits
+    df_test['proba_0'] = y_pred1[:, 0]
+    df_test['proba_1'] = y_pred1[:, 1]
+    df_test['proba_2'] = y_pred1[:, 2]
+    y_pred2 += model2.predict_proba(df_test[use_features + ['proba_0', 'proba_1', 'proba_2']]) / folds.n_splits
 
     val_pred = []
     val_proba = model1.predict_proba(x_val1)
     for i in range(val_proba.shape[0]):
         if np.argmax(val_proba[i]) == 0:
-            proba = model2.predict_proba([x_val1.iloc[i]])
+            proba = model2.predict_proba([x_val1.iloc[i].values.tolist() + val_proba[i].tolist()])
             val_pred.append(np.argmax(proba[0]))
         else:
             val_pred.append(np.argmax(val_proba[i])+1)

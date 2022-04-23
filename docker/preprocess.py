@@ -76,6 +76,7 @@ for i in tqdm(range(log_df.shape[0])):
         msg = 'memory mem_ch | ' + ' | '.join(msg.split(' | ')[1:])
     if msg.startswith('power supply #0'):
         msg = 'power supply hex | ' + ' | '.join(msg.split(' | ')[1:])
+    msg = msg.replace('_', ' ')
     data.append(msg)
 
 log_df['msg_lower'] = data

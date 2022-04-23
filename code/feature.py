@@ -49,7 +49,17 @@ label_model_cnt_df = label_df.groupby(['server_model', 'label']).size().reset_in
 label_model_cnt_df = label_model_cnt_df.merge(label_cnt_df, on='label', how='left')
 label_model_cnt_df['model/label'] = label_model_cnt_df['label_model_cnt'] / label_model_cnt_df['label_cnt']
 
+def safe_split(strs, n, sep='|'):
+    str_li = strs.split(sep)
+    if len(str_li) >= n + 1:
+        return str_li[n].strip()
+    else:
+        return ''
+
 log_df['time_gap'] = log_df['time'].dt.ceil('30T')
+log_df['msg_split_0'] = log_df['msg_lower'].apply(lambda x: safe_split(x, 0))
+log_df['msg_split_1'] = log_df['msg_lower'].apply(lambda x: safe_split(x, 1))
+log_df['msg_split_2'] = log_df['msg_lower'].apply(lambda x: safe_split(x, 2))
 
 sentences_list = list()
 for info, group in log_df.groupby(['sn', 'time_gap']):
@@ -87,6 +97,14 @@ def get_statistical_features(df1, df2, suffix):
 
     processor_nunique = df1[~df1['msg_lower'].str.startswith('processor')]['msg_id'].nunique()
 
+    msg_split_0_nunique = df1['msg_split_0'].nunique()
+    msg_split_1_nunique = df1['msg_split_1'].nunique()
+    msg_split_2_nunique = df1['msg_split_2'].nunique()
+
+    msg_split_0_percent = df1['msg_split_0'].nunique() / cnt1 if cnt1 > 0 else 0
+    msg_split_1_percent = df1['msg_split_1'].nunique() / cnt1 if cnt1 > 0 else 0
+    msg_split_2_percent = df1['msg_split_2'].nunique() / cnt1 if cnt1 > 0 else 0
+
     return {
         'cnt_%s'%suffix: cnt1,
         'percent_%s'%suffix: percent,
@@ -97,12 +115,20 @@ def get_statistical_features(df1, df2, suffix):
         'template_to_msg_percent_%s'%suffix: template_to_msg_percent,
         'msg_to_msg_percent_%s'%suffix: msg_to_msg_percent,
         'template_to_template_percent_%s'%suffix: template_to_template_percent,
-        'processor_nunique': processor_nunique
+        'processor_nunique_%s'%suffix: processor_nunique,
+        'msg_split_0_nunique_%s'%suffix: msg_split_0_nunique,
+        'msg_split_1_nunique_%s'%suffix: msg_split_1_nunique,
+        'msg_split_2_nunique_%s'%suffix: msg_split_2_nunique,
+        'msg_split_0_percent_%s'%suffix: msg_split_0_percent,
+        'msg_split_1_percent_%s'%suffix: msg_split_1_percent,
+        'msg_split_2_percent_%s'%suffix: msg_split_2_percent,
     }
 
 def get_time_feature(df, fault_time_ts, suffix):
     if df.shape[0] == 0:
-        second_span = np.nan
+        second_span_0 = np.nan
+        second_span_5 = np.nan
+        second_span_10 = np.nan
         second_span_mean = np.nan
         time_diffs_avg = np.nan
         time_diffs_max = np.nan
@@ -114,7 +140,9 @@ def get_time_feature(df, fault_time_ts, suffix):
         for i in range(df.shape[0]):
             ts = df.iloc[i]['time_ts']
             ts_diff_list.append(fault_time_ts - ts)
-        second_span = ts_diff_list[-1]
+        second_span_0 = ts_diff_list[-1]
+        second_span_5 = ts_diff_list[-5] if len(ts_diff_list) >= 5 else np.nan
+        second_span_10 = ts_diff_list[-10] if len(ts_diff_list) >= 10 else np.nan
         second_span_mean = np.mean(ts_diff_list)
         time_diffs = df['time_ts'].diff().iloc[1:]
         time_diffs_avg = np.mean(time_diffs) if time_diffs.shape[0] > 0 else np.nan
@@ -123,7 +151,9 @@ def get_time_feature(df, fault_time_ts, suffix):
         time_diffs_std = np.std(time_diffs) if time_diffs.shape[0] > 0 else np.nan
         max_time_diff = df['time_ts'].iloc[-1] - df['time_ts'].iloc[0]
     return {
-        'second_span_%s'%suffix: second_span,
+        'second_span0_%s'%suffix: second_span_0,
+        'second_span5_%s'%suffix: second_span_5,
+        'second_span10_%s'%suffix: second_span_10,
         'second_span_mean_%s'%suffix: second_span_mean,
         'time_diffs_avg_%s'%suffix: time_diffs_avg,
         'time_diffs_max_%s'%suffix: time_diffs_max,
@@ -236,10 +266,10 @@ def make_dataset(dataset, data_type='train'):
         # df_tmp1 = sub_log[sub_log['time_ts'] - fault_time_ts >= -60 * 60 * 2]
         df_tmp1 = sub_log.tail(20)
         df_tmp2 = sub_log[sub_log['time_ts'] - fault_time_ts >= -60 * 60 * 24]
-        data_tmp = get_statistical_features(df_tmp1, df_tmp2, '2h')
+        data_tmp = get_statistical_features(df_tmp1, df_tmp2, 'tail20')
         data.update(data_tmp)
 
-        data_tmp = get_time_feature(df_tmp1, fault_time_ts, '2h')
+        data_tmp = get_time_feature(df_tmp1, fault_time_ts, 'tail20')
         data.update(data_tmp)
 
         data_tmp = get_feature2(df_tmp1)
@@ -254,12 +284,20 @@ def make_dataset(dataset, data_type='train'):
         data_tmp = get_tfidf_feature(df_tmp1)
         data.update(data_tmp)
 
-        sub_crashdump = crashdump_df[(crashdump_df['sn'] == sn) & (crashdump_df['fault_time_ts'] <= fault_time_ts)]
+        sub_crashdump = crashdump_df[(crashdump_df['sn'] == sn) & \
+            (crashdump_df['fault_time_ts'] <= fault_time_ts) & \
+            (fault_time_ts - crashdump_df['fault_time_ts'] <= 60 * 60 * 24)]
         sub_crashdump = sub_crashdump.sort_values(by='fault_time_ts')
         data['crashdump_cnt'] = sub_crashdump.shape[0]
 
-        sub_venus = venus_df[(venus_df['sn'] == sn) & (venus_df['fault_time_ts'] <= fault_time_ts)]
+        sub_venus = venus_df[(venus_df['sn'] == sn) & \
+            (venus_df['fault_time_ts'] <= fault_time_ts) & \
+            (fault_time_ts - venus_df['fault_time_ts'] <= 60 * 60 * 24)]
         sub_venus = sub_venus.sort_values(by='fault_time_ts')
+        if sub_venus.shape[0] > 0:
+            data['venus_module_cnt'] = len(sub_venus.iloc[-1]['module'].split(','))
+        else:
+            data['venus_module_cnt'] = 0
         data['venus_cnt'] = sub_venus.shape[0]
 
         if data_type == 'train':
