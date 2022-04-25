@@ -6,6 +6,8 @@ from tqdm import tqdm
 from collections import Counter
 
 from gensim.models.word2vec import Word2Vec
+from nltk.tokenize import word_tokenize
+from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 
@@ -75,6 +77,11 @@ for s in sentences_list:
     sentences.append([w for w in s.split()])
 
 w2v_model = Word2Vec(sentences, vector_size=64, window=3, min_count=2, sg=0, hs=1, workers=1, seed=2022)
+
+# tokenized_sent = [word_tokenize(s.lower()) for s in sentences_list]
+# tagged_data = [TaggedDocument(d, [i]) for i, d in enumerate(tokenized_sent)]
+# d2v_model = Doc2Vec(tagged_data, vector_size=32, window=3, min_count=2, workers=1, seed=2022)
+# d2v_model.random.seed(2022)
 
 tfv = TfidfVectorizer(ngram_range=(1,3), min_df=5, max_features=50000)
 tfv.fit(sentences_list)
@@ -220,6 +227,13 @@ def get_w2v_feature(df):
         data['w2v_%d'%i] = vec[i]
     return data
 
+# def get_d2v_feature(df):
+#     vec = d2v_model.infer_vector(['\n'.join(df['msg_lower'].values.astype(str))])
+#     data = {}
+#     for i in range(32):
+#         data['d2v_%d'%i] = vec[i]
+#     return data
+
 def get_feature3(df):
     if df.shape[0] > 0:
         server_model = df['server_model'].values[0]
@@ -281,6 +295,9 @@ def make_dataset(dataset, data_type='train'):
 
         data_tmp = get_w2v_feature(df_tmp1)
         data.update(data_tmp)
+
+        # data_tmp = get_d2v_feature(df_tmp1)
+        # data.update(data_tmp)
 
         data_tmp = get_feature3(df_tmp1)
         data.update(data_tmp)

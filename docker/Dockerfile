@@ -6,6 +6,7 @@ ADD data /data
 ADD prediction_result /prediction_result
 RUN pip install --upgrade pip
 RUN pip --no-cache-dir install  -r requirements.txt
+RUN python -m nltk.downloader punkt
 
 RUN apt -y update
 RUN apt install zip
