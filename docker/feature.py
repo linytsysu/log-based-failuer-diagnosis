@@ -55,6 +55,21 @@ label_model_cnt_df = label_df.groupby(['server_model', 'label']).size().reset_in
 label_model_cnt_df = label_model_cnt_df.merge(label_cnt_df, on='label', how='left')
 label_model_cnt_df['model/label'] = label_model_cnt_df['label_model_cnt'] / label_model_cnt_df['label_cnt']
 
+# counter_map = {}
+# for idx in tqdm(range(label_df.shape[0])):
+#     row = label_df.iloc[idx]
+#     sn = row['sn']
+#     fault_time_ts = row['fault_time_ts']
+#     sub_log = log_df[(log_df['sn'] == sn) & (log_df['time_ts'] <= fault_time_ts)]
+#     sub_log = sub_log.sort_values(by='time')
+#     df_tmp = sub_log.tail(20)
+#     k = '%d'%(row['label'])
+#     if not k in counter_map:
+#         counter_map[k] = Counter()
+#     counter_map[k].update(np.unique(df_tmp['msg_id'].values.tolist()))
+# for k in counter_map:
+#     counter_map[k] = [item[0] for item in counter_map[k].most_common()[:50]]
+
 def safe_split(strs, n, sep='|'):
     str_li = strs.split(sep)
     if len(str_li) >= n + 1:
@@ -137,6 +152,7 @@ def get_statistical_features(df1, df2, suffix):
 
 def get_time_feature(df, fault_time_ts, suffix):
     if df.shape[0] == 0:
+        first_time_span = np.nan
         second_span_0 = np.nan
         second_span_5 = np.nan
         second_span_10 = np.nan
@@ -146,11 +162,13 @@ def get_time_feature(df, fault_time_ts, suffix):
         time_diffs_min = np.nan
         time_diffs_std = np.nan
         max_time_diff = np.nan
+        max_time_diff_div_first_time_span = np.nan
     else:
         ts_diff_list = []
         for i in range(df.shape[0]):
             ts = df.iloc[i]['time_ts']
             ts_diff_list.append(fault_time_ts - ts)
+        first_time_span = ts_diff_list[0]
         second_span_0 = ts_diff_list[-1]
         second_span_5 = ts_diff_list[-5] if len(ts_diff_list) >= 5 else np.nan
         second_span_10 = ts_diff_list[-10] if len(ts_diff_list) >= 10 else np.nan
@@ -161,7 +179,9 @@ def get_time_feature(df, fault_time_ts, suffix):
         time_diffs_min = np.min(time_diffs) if time_diffs.shape[0] > 0 else np.nan
         time_diffs_std = np.std(time_diffs) if time_diffs.shape[0] > 0 else np.nan
         max_time_diff = df['time_ts'].iloc[-1] - df['time_ts'].iloc[0]
+        max_time_diff_div_first_time_span = max_time_diff / first_time_span if first_time_span > 0 else np.nan
     return {
+        'first_time_span_%s'%suffix: first_time_span,
         'second_span0_%s'%suffix: second_span_0,
         'second_span5_%s'%suffix: second_span_5,
         'second_span10_%s'%suffix: second_span_10,
@@ -170,7 +190,8 @@ def get_time_feature(df, fault_time_ts, suffix):
         'time_diffs_max_%s'%suffix: time_diffs_max,
         'time_diffs_min_%s'%suffix: time_diffs_min,
         'time_diffs_std_%s'%suffix: time_diffs_std,
-        'max_time_diff_%s'%suffix: max_time_diff
+        'max_time_diff_%s'%suffix: max_time_diff,
+        'max_time_diff_div_first_time_span_%s'%suffix: max_time_diff_div_first_time_span,
     }
 
 def get_feature2(df):
@@ -262,6 +283,32 @@ def get_tfidf_feature(df):
         data['tfv_%d'%i] = vec[i]
     return data
 
+def get_feature4(df):
+    if df.shape[0] == 0:
+        last_template_cnt = np.nan
+        last_template_percent = np.nan
+    else:
+        last_template_id = df['template_id'].values[-1]
+        last_template_cnt = df[df['template_id'] == last_template_id].shape[0]
+        last_template_percent = last_template_cnt / df.shape[0]
+    return {
+        'last_template_cnt': last_template_cnt,
+        'last_template_percent': last_template_percent,
+    }
+
+def get_feature5(df):
+    keywords = [
+        'button', 'critical', 'drive', 'event', 'fan', 'management',
+        'memory', 'microcontroller', 'microcontroller/coprocessor', 'oem',
+        'os', 'power', 'processor', 'slot', 'slot/connector', 'system',
+        'temperature', 'unknown', 'watchdog', 'watchdog2']
+    data = {}
+    for keyword in keywords:
+        sub_df = df[df['msg_lower'].str.startswith(keyword)]
+        data['%s_cnt'%keyword] = sub_df.shape[0]
+        data['%s_percent'%keyword] = data['%s_cnt'%keyword] / df.shape[0] if df.shape[0] > 0 else 0
+    return data
+
 def make_dataset(dataset, data_type='train'):
     ret = []
     for idx in tqdm(range(dataset.shape[0])):
@@ -283,7 +330,7 @@ def make_dataset(dataset, data_type='train'):
         }
         # df_tmp1 = sub_log[sub_log['time_ts'] - fault_time_ts >= -60 * 60 * 2]
         df_tmp1 = sub_log.tail(20)
-        df_tmp2 = sub_log[sub_log['time_ts'] - fault_time_ts >= -60 * 60 * 24]
+        df_tmp2 = sub_log.tail(50)
         data_tmp = get_statistical_features(df_tmp1, df_tmp2, 'tail20')
         data.update(data_tmp)
 
@@ -304,6 +351,17 @@ def make_dataset(dataset, data_type='train'):
 
         data_tmp = get_tfidf_feature(df_tmp1)
         data.update(data_tmp)
+
+        data_tmp = get_feature4(df_tmp1)
+        data.update(data_tmp)
+
+        # data_tmp = get_feature5(df_tmp1)
+        # data.update(data_tmp)
+
+        # for label in range(4):
+        #     k = '%d'%(label)
+        #     intersect = np.intersect1d(np.unique(df_tmp1['msg_id'].values), counter_map[k])
+        #     data['intersect1d_%d'%label] = len(intersect) / len(counter_map[k])
 
         sub_crashdump = crashdump_df[(crashdump_df['sn'] == sn) & \
             (crashdump_df['fault_time_ts'] <= fault_time_ts) & \

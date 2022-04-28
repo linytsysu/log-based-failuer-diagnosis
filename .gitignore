@@ -29,3 +29,5 @@ catboost_info
 /bert2/*.csv
 
 /docker/data
+
+nltk_data

@@ -75,7 +75,7 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
     classes = np.unique(y_train)
     weights = compute_class_weight(class_weight='balanced', classes=classes, y=y_train)
     class_weights = dict(zip(classes, weights))
-    print(NUM_CLASSES, class_weights)
+    # print(NUM_CLASSES, class_weights)
     params = {
         'task_type': 'CPU',
         'bootstrap_type': 'Bayesian',
@@ -101,7 +101,7 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
     model.fit(x_train,
                y_train,
                eval_set=(x_val, y_val),
-               verbose=100)
+               verbose=False)
     return model
 
 FOLDS = 10
@@ -114,6 +114,7 @@ y_pred2 = np.zeros((len(df_test), 2))
 
 folds = GroupKFold(n_splits=FOLDS)
 for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label'], df_train['sn'])):
+    print('fold: %d'%fold)
     df_trian_sub = df_train.iloc[tr_ind].copy()
     df_valid_sub = df_train.iloc[val_ind].copy()
 
@@ -123,12 +124,12 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
     y_val1 = y_val1.apply(lambda x: 0 if x <= 1 else x-1)
     model1 = cat_model_train(x_train1, y_train1, x_val1, y_val1)
 
-    print("Features importance...")
+    # print("Features importance...")
     feat_imp = pd.DataFrame({'imp': model1.feature_importances_, 'feature': use_features})
     feat_imp.sort_values(by='imp').to_csv('%d_imp1.csv'%fold, index=False)
-    print(feat_imp.sort_values(by='imp').reset_index(drop=True))
+    # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
 
-    print(f1_score(y_val1, model1.predict_proba(x_val1).argmax(axis=1), average='macro'))
+    # print(f1_score(y_val1, model1.predict_proba(x_val1).argmax(axis=1), average='macro'))
 
     trn_proba = model1.predict_proba(x_train1)
     val_proba = model1.predict_proba(x_val1)
@@ -146,10 +147,10 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
                        df_valid_sub[df_valid_sub['label'] <= 1][target]
     model2 = cat_model_train(x_train2, y_train2, x_val2, y_val2, mode='binary')
 
-    print("Features importance...")
+    # print("Features importance...")
     feat_imp = pd.DataFrame({'imp': model2.feature_importances_, 'feature': use_features + ['proba_0', 'proba_1', 'proba_2']})
     feat_imp.sort_values(by='imp').to_csv('%d_imp2.csv'%fold, index=False)
-    print(feat_imp.sort_values(by='imp').reset_index(drop=True))
+    # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
 
     y_pred1 += model1.predict_proba(df_test[use_features]) / folds.n_splits
     df_test['proba_0'] = y_pred1[:, 0]
