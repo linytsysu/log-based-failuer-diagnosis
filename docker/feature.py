@@ -5,6 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 from collections import Counter
 
+from scipy.stats import skew, kurtosis
 from gensim.models.word2vec import Word2Vec
 from nltk.tokenize import word_tokenize
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
@@ -141,7 +142,7 @@ def get_statistical_features(df1, df2, suffix):
         'template_to_msg_percent_%s'%suffix: template_to_msg_percent,
         'msg_to_msg_percent_%s'%suffix: msg_to_msg_percent,
         'template_to_template_percent_%s'%suffix: template_to_template_percent,
-        'processor_nunique': processor_nunique,
+        'processor_nunique_%s'%suffix: processor_nunique,
         'msg_split_0_nunique_%s'%suffix: msg_split_0_nunique,
         'msg_split_1_nunique_%s'%suffix: msg_split_1_nunique,
         'msg_split_2_nunique_%s'%suffix: msg_split_2_nunique,
@@ -157,10 +158,15 @@ def get_time_feature(df, fault_time_ts, suffix):
         second_span_5 = np.nan
         second_span_10 = np.nan
         second_span_mean = np.nan
+        second_span_std = np.nan
+        second_span_skew = np.nan
+        second_span_kurtosis = np.nan
         time_diffs_avg = np.nan
         time_diffs_max = np.nan
         time_diffs_min = np.nan
         time_diffs_std = np.nan
+        time_diffs_kurtosis = np.nan
+        time_diffs_skew = np.nan
         max_time_diff = np.nan
         max_time_diff_div_first_time_span = np.nan
     else:
@@ -173,11 +179,16 @@ def get_time_feature(df, fault_time_ts, suffix):
         second_span_5 = ts_diff_list[-5] if len(ts_diff_list) >= 5 else np.nan
         second_span_10 = ts_diff_list[-10] if len(ts_diff_list) >= 10 else np.nan
         second_span_mean = np.mean(ts_diff_list)
+        second_span_std = np.std(ts_diff_list)
+        second_span_kurtosis = kurtosis(ts_diff_list)
+        second_span_skew = skew(ts_diff_list)
         time_diffs = df['time_ts'].diff().iloc[1:]
         time_diffs_avg = np.mean(time_diffs) if time_diffs.shape[0] > 0 else np.nan
         time_diffs_max = np.max(time_diffs) if time_diffs.shape[0] > 0 else np.nan
         time_diffs_min = np.min(time_diffs) if time_diffs.shape[0] > 0 else np.nan
         time_diffs_std = np.std(time_diffs) if time_diffs.shape[0] > 0 else np.nan
+        time_diffs_kurtosis = kurtosis(time_diffs) if time_diffs.shape[0] > 0 else np.nan
+        time_diffs_skew = skew(time_diffs) if time_diffs.shape[0] > 0 else np.nan
         max_time_diff = df['time_ts'].iloc[-1] - df['time_ts'].iloc[0]
         max_time_diff_div_first_time_span = max_time_diff / first_time_span if first_time_span > 0 else np.nan
     return {
@@ -186,10 +197,15 @@ def get_time_feature(df, fault_time_ts, suffix):
         'second_span5_%s'%suffix: second_span_5,
         'second_span10_%s'%suffix: second_span_10,
         'second_span_mean_%s'%suffix: second_span_mean,
+        'second_span_std_%s'%suffix: second_span_std,
+        'second_span_kurtosis_%s'%suffix: second_span_kurtosis,
+        'second_span_skew_%s'%suffix: second_span_skew,
         'time_diffs_avg_%s'%suffix: time_diffs_avg,
         'time_diffs_max_%s'%suffix: time_diffs_max,
         'time_diffs_min_%s'%suffix: time_diffs_min,
         'time_diffs_std_%s'%suffix: time_diffs_std,
+        'time_diffs_kurtosis_%s'%suffix: time_diffs_kurtosis,
+        'time_diffs_skew_%s'%suffix: time_diffs_skew,
         'max_time_diff_%s'%suffix: max_time_diff,
         'max_time_diff_div_first_time_span_%s'%suffix: max_time_diff_div_first_time_span,
     }
@@ -296,17 +312,21 @@ def get_feature4(df):
         'last_template_percent': last_template_percent,
     }
 
-def get_feature5(df):
-    keywords = [
-        'button', 'critical', 'drive', 'event', 'fan', 'management',
-        'memory', 'microcontroller', 'microcontroller/coprocessor', 'oem',
-        'os', 'power', 'processor', 'slot', 'slot/connector', 'system',
-        'temperature', 'unknown', 'watchdog', 'watchdog2']
+def get_feature5(df, fault_time_ts):
+    keywords = ['memory', 'microcontroller','processor', 'system', 'unknown']
     data = {}
     for keyword in keywords:
         sub_df = df[df['msg_lower'].str.startswith(keyword)]
-        data['%s_cnt'%keyword] = sub_df.shape[0]
-        data['%s_percent'%keyword] = data['%s_cnt'%keyword] / df.shape[0] if df.shape[0] > 0 else 0
+        if sub_df.shape[0] == 0:
+            data['%s_span_time'%keyword] = np.nan
+            data['%s_mean_span_time'%keyword] = np.nan
+        else:
+            ts_diff_list = []
+            for i in range(sub_df.shape[0]):
+                ts = sub_df.iloc[i]['time_ts']
+                ts_diff_list.append(fault_time_ts - ts)
+            data['%s_span_time'%keyword] = ts_diff_list[-1]
+            data['%s_mean_span_time'%keyword] = np.mean(ts_diff_list)
     return data
 
 def make_dataset(dataset, data_type='train'):
@@ -326,7 +346,9 @@ def make_dataset(dataset, data_type='train'):
             'fault_time': fault_time,
             'server_model': server_model,
             'last_msg_id': last_msg_id,
-            'last_template_id': last_template_id
+            'last_template_id': last_template_id,
+            # 'fault_hour': fault_time.hour,
+            # 'fault_dayofweek': fault_time.dayofweek,
         }
         # df_tmp1 = sub_log[sub_log['time_ts'] - fault_time_ts >= -60 * 60 * 2]
         df_tmp1 = sub_log.tail(20)
@@ -355,7 +377,7 @@ def make_dataset(dataset, data_type='train'):
         data_tmp = get_feature4(df_tmp1)
         data.update(data_tmp)
 
-        # data_tmp = get_feature5(df_tmp1)
+        # data_tmp = get_feature5(df_tmp1, fault_time_ts)
         # data.update(data_tmp)
 
         # for label in range(4):
@@ -377,6 +399,7 @@ def make_dataset(dataset, data_type='train'):
             data['venus_module_cnt'] = len(sub_venus.iloc[-1]['module'].split(','))
         else:
             data['venus_module_cnt'] = 0
+        data['venus_cnt'] = sub_venus.shape[0]
 
         if data_type == 'train':
             data['label'] = row['label']

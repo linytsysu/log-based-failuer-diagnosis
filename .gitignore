@@ -31,3 +31,5 @@ catboost_info
 /docker/data
 
 nltk_data
+
+/code2/*.csv
