@@ -23,8 +23,8 @@ dtype = {
     'msg_appearance_3': 'str',
     'max_continuous_msg': 'str'
 }
-df_train = pd.read_csv('train.csv', dtype=dtype)
-df_test = pd.read_csv('test.csv', dtype=dtype)
+df_train = pd.read_csv('../user_data/train.csv', dtype=dtype)
+df_test = pd.read_csv('../user_data/test.csv', dtype=dtype)
 
 print(df_train.shape, df_test.shape)
 
@@ -125,8 +125,8 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
     model1 = cat_model_train(x_train1, y_train1, x_val1, y_val1)
 
     # print("Features importance...")
-    feat_imp = pd.DataFrame({'imp': model1.feature_importances_, 'feature': use_features})
-    feat_imp.sort_values(by='imp').to_csv('%d_imp1.csv'%fold, index=False)
+    # feat_imp = pd.DataFrame({'imp': model1.feature_importances_, 'feature': use_features})
+    # feat_imp.sort_values(by='imp').to_csv('%d_imp1.csv'%fold, index=False)
     # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
 
     # print(f1_score(y_val1, model1.predict_proba(x_val1).argmax(axis=1), average='macro'))
@@ -148,8 +148,8 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
     model2 = cat_model_train(x_train2, y_train2, x_val2, y_val2, mode='binary')
 
     # print("Features importance...")
-    feat_imp = pd.DataFrame({'imp': model2.feature_importances_, 'feature': use_features + ['proba_0', 'proba_1', 'proba_2']})
-    feat_imp.sort_values(by='imp').to_csv('%d_imp2.csv'%fold, index=False)
+    # feat_imp = pd.DataFrame({'imp': model2.feature_importances_, 'feature': use_features + ['proba_0', 'proba_1', 'proba_2']})
+    # feat_imp.sort_values(by='imp').to_csv('%d_imp2.csv'%fold, index=False)
     # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
 
     y_pred1 += model1.predict_proba(df_test[use_features]) / folds.n_splits
@@ -198,4 +198,4 @@ label_df = pd.concat([label1, label2]).reset_index(drop=True)
 label_df = label_df.drop_duplicates().reset_index(drop=True)
 print(label_df['label'].value_counts() / label_df.shape[0])
 
-sub.to_csv('baseline3_gkf_sn_new.csv', index=False)
+sub.to_csv('../prediction_result/baseline3_gkf_sn_new.csv', index=False)

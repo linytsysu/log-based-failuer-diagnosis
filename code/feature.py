@@ -1,5 +1,6 @@
 import os
 import json
+import argparse
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -7,21 +8,27 @@ from collections import Counter
 
 from scipy.stats import skew, kurtosis
 from gensim.models.word2vec import Word2Vec
-from nltk.tokenize import word_tokenize
-from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 
-label1 = pd.read_csv('../data/preliminary_train_label_dataset.csv')
-label2 = pd.read_csv('../data/preliminary_train_label_dataset_s.csv')
+parser = argparse.ArgumentParser()
+parser.add_argument("-s", "--stage")
+args = parser.parse_args()
+stage = args.stage
+
+label1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_train_label_dataset.csv'))
+label2 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_train_label_dataset_s.csv'))
 label_df = pd.concat([label1, label2]).reset_index(drop=True)
 label_df = label_df.drop_duplicates().reset_index(drop=True)
 
-submit_df = pd.read_csv('../data/preliminary_submit_dataset_b.csv')
+if stage == 'final_a':
+    submit_df = pd.read_csv('/tcdata/final_submit_dataset_a.csv')
+else:
+    submit_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_submit_dataset_b.csv'))
 
 print(label_df.shape, submit_df.shape)
 
-log_df = pd.read_csv('./log_template.csv')
+log_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/log_template.csv'))
 log_df['msg_lower'] = log_df['msg_lower'].astype(str)
 log_df['server_model'] = log_df['server_model'].astype(str)
 
@@ -33,8 +40,16 @@ log_df['time_ts'] = log_df["time"].values.astype(np.int64) // 10 ** 9
 label_df['fault_time_ts'] = label_df["fault_time"].values.astype(np.int64) // 10 ** 9
 submit_df['fault_time_ts'] = submit_df["fault_time"].values.astype(np.int64) // 10 ** 9
 
-crashdump_df = pd.read_csv('../data/preliminary_crashdump_dataset.csv')
-venus_df = pd.read_csv('../data/preliminary_venus_dataset.csv')
+if stage == 'final_a':
+    crashdump_df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_crashdump_dataset.csv'))
+    venus_df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_venus_dataset.csv'))
+    crashdump_df2 = pd.read_csv('/tcdata/final_crashdump_dataset_a.csv')
+    venus_df2 = pd.read_csv('/tcdata/final_venus_dataset_a.csv')
+    crashdump_df = pd.concat([crashdump_df1, crashdump_df2]).reset_index(drop=True)
+    venus_df = pd.concat([venus_df1, venus_df2]).reset_index(drop=True)
+else:
+    crashdump_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_crashdump_dataset.csv'))
+    venus_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_venus_dataset.csv'))
 crashdump_df['fault_time'] = pd.to_datetime(crashdump_df['fault_time'])
 venus_df['fault_time'] = pd.to_datetime(venus_df['fault_time'])
 crashdump_df['fault_time_ts'] = crashdump_df["fault_time"].values.astype(np.int64) // 10 ** 9
@@ -408,5 +423,5 @@ df_train = pd.DataFrame(train)
 test = make_dataset(submit_df, data_type='test')
 df_test = pd.DataFrame(test)
 
-df_train.to_csv('train.csv', index=False)
-df_test.to_csv('test.csv', index=False)
+df_train.to_csv(os.path.join(os.path.dirname(__file__), '../user_data/train.csv'), index=False)
+df_test.to_csv(os.path.join(os.path.dirname(__file__), '../user_data/test.csv'), index=False)

@@ -6,7 +6,7 @@ env
 __pycache__
 
 /data
-/user_data
+/user_data/*.csv
 
 nezha-base-count3/pretrain/nezha_model/
 nezha-base-count3/pretrain/nezha_output/
@@ -32,4 +32,5 @@ catboost_info
 
 nltk_data
 
+/code1/*.csv
 /code2/*.csv

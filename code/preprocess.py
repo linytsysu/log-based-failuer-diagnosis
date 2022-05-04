@@ -1,5 +1,6 @@
 import os
 import json
+import argparse
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -9,15 +10,23 @@ from drain3 import TemplateMiner #开源在线日志解析框架
 from drain3.file_persistence import FilePersistence
 from drain3.template_miner_config import TemplateMinerConfig
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-s", "--stage")
+args = parser.parse_args()
+stage = args.stage
 
-label1 = pd.read_csv('../data/preliminary_train_label_dataset.csv')
-label2 = pd.read_csv('../data/preliminary_train_label_dataset_s.csv')
+label1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_train_label_dataset.csv'))
+label2 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_train_label_dataset_s.csv'))
 label_df = pd.concat([label1, label2]).reset_index(drop=True)
 
-train_log_df = pd.read_csv('../data/preliminary_sel_log_dataset.csv')
-test_log_df = pd.read_csv('../data/preliminary_sel_log_dataset_a.csv')
-test_b_log_df = pd.read_csv('../data/preliminary_sel_log_dataset_b.csv')
-log_df = pd.concat([train_log_df, test_log_df, test_b_log_df]).reset_index(drop=True)
+train_log_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_sel_log_dataset.csv'))
+test_log_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_sel_log_dataset_a.csv'))
+test_b_log_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_sel_log_dataset_b.csv'))
+if stage == 'final_a':
+    final_test_a_log_df = pd.read_csv('/tcdata/final_sel_log_dataset_a.csv')
+    log_df = pd.concat([train_log_df, test_log_df, test_b_log_df, final_test_a_log_df]).reset_index(drop=True)
+else:
+    log_df = pd.concat([train_log_df, test_log_df, test_b_log_df]).reset_index(drop=True)
 log_df = log_df.dropna(subset=['server_model'])
 log_df = log_df.fillna('MISSING')
 
@@ -88,11 +97,11 @@ for i in range(len(msg_unique)):
 log_df['msg_id'] = log_df['msg_lower'].apply(lambda x: msg_map[x])
 
 config = TemplateMinerConfig()
-config.load('./drain3.ini')
+config.load(os.path.join(os.path.dirname(__file__), './drain3.ini'))
 config.profiling_enabled = False
 
-drain_file = 'comp_a_sellog'
-persistence = FilePersistence(drain_file + '.bin')
+drain_file = 'comp_a_sellog.bin'
+persistence = FilePersistence(os.path.join(os.path.dirname(__file__), drain_file))
 template_miner = TemplateMiner(persistence, config=config)
 
 for msg in log_df.msg_lower.tolist():
@@ -116,4 +125,4 @@ def match_template(df, template_miner, template_dic):
 
 log_df = log_df.apply(match_template, template_miner=template_miner, template_dic=template_dic, axis=1)
 
-log_df.to_csv('log_template.csv', index=False)
+log_df.to_csv(os.path.join(os.path.dirname(__file__), '../user_data/log_template.csv'), index=False)

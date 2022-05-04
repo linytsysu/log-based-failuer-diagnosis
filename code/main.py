@@ -1,4 +1,6 @@
+import os
 import gc
+import argparse
 import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score, accuracy_score
@@ -7,6 +9,11 @@ from sklearn.utils.class_weight import compute_class_weight
 from catboost import CatBoostClassifier, CatBoostRegressor
 import lightgbm as lgb
 from tqdm import tqdm
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-s", "--stage")
+args = parser.parse_args()
+stage = args.stage
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -23,24 +30,10 @@ dtype = {
     'msg_appearance_3': 'str',
     'max_continuous_msg': 'str'
 }
-df_train = pd.read_csv('train.csv', dtype=dtype)
-df_test = pd.read_csv('test.csv', dtype=dtype)
+df_train = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/train.csv'), dtype=dtype)
+df_test = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/test.csv'), dtype=dtype)
 
 print(df_train.shape, df_test.shape)
-
-# bert_train = pd.read_csv('../bert2/train_3class.csv')
-# bert_test = pd.read_csv('../bert2/test_3class.csv')
-
-# df_train = pd.concat([df_train, bert_train.iloc[:, 8:]], axis=1)
-# df_test = pd.concat([df_test, bert_test.iloc[:, 8:]], axis=1)
-
-# df_train2 = pd.read_csv('train2.csv')
-# df_test2 = pd.read_csv('test2.csv')
-
-# df_train = df_train.merge(df_train2, on=['sn', 'fault_time', 'label'])
-# df_test = df_test.merge(df_test2, on=['sn', 'fault_time'])
-
-# print(df_train2.shape, df_test2.shape)
 
 for name in ['server_model', 'last_msg_id', 'last_template_id', 'tmp_appearance_1', 'tmp_appearance_2',
              'tmp_appearance_3', 'msg_appearance_1', 'msg_appearance_2', 'msg_appearance_3', 'max_continuous_msg']:
@@ -75,7 +68,7 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
     classes = np.unique(y_train)
     weights = compute_class_weight(class_weight='balanced', classes=classes, y=y_train)
     class_weights = dict(zip(classes, weights))
-    print(NUM_CLASSES, class_weights)
+    # print(NUM_CLASSES, class_weights)
     params = {
         'task_type': 'CPU',
         'bootstrap_type': 'Bayesian',
@@ -101,7 +94,7 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
     model.fit(x_train,
                y_train,
                eval_set=(x_val, y_val),
-               verbose=100)
+               verbose=False)
     return model
 
 FOLDS = 10
@@ -114,6 +107,7 @@ y_pred2 = np.zeros((len(df_test), 2))
 
 folds = GroupKFold(n_splits=FOLDS)
 for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label'], df_train['sn'])):
+    print('fold: %d'%fold)
     df_trian_sub = df_train.iloc[tr_ind].copy()
     df_valid_sub = df_train.iloc[val_ind].copy()
 
@@ -125,7 +119,7 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
 
     # print("Features importance...")
     # feat_imp = pd.DataFrame({'imp': model1.feature_importances_, 'feature': use_features})
-    # feat_imp.sort_values(by='imp').to_csv('%d_imp.csv'%fold, index=False)
+    # feat_imp.sort_values(by='imp').to_csv('%d_imp1.csv'%fold, index=False)
     # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
 
     trn_proba = model1.predict_proba(x_train1)
@@ -138,13 +132,16 @@ for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label']
     df_valid_sub['proba_1'] = val_proba[:, 1]
     df_valid_sub['proba_2'] = val_proba[:, 2]
 
-    print(f1_score(y_val1, model1.predict_proba(x_val1).argmax(axis=1), average='macro'))
-
     x_train2, x_val2 = df_trian_sub[df_trian_sub['label'] <= 1][use_features + ['proba_0', 'proba_1', 'proba_2']], \
                        df_valid_sub[df_valid_sub['label'] <= 1][use_features + ['proba_0', 'proba_1', 'proba_2']]
     y_train2, y_val2 = df_trian_sub[df_trian_sub['label'] <= 1][target],\
                        df_valid_sub[df_valid_sub['label'] <= 1][target]
     model2 = cat_model_train(x_train2, y_train2, x_val2, y_val2, mode='binary')
+
+    # print("Features importance...")
+    # feat_imp = pd.DataFrame({'imp': model2.feature_importances_, 'feature': use_features + ['proba_0', 'proba_1', 'proba_2']})
+    # feat_imp.sort_values(by='imp').to_csv('%d_imp2.csv'%fold, index=False)
+    # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
 
     y_pred1 += model1.predict_proba(df_test[use_features]) / folds.n_splits
     df_test['proba_0'] = y_pred1[:, 0]
@@ -181,9 +178,15 @@ for i in range(y_pred1.shape[0]):
     else:
         y_pred.append(np.argmax(y_pred1[i])+1)
 
-submit_df = pd.read_csv('/tcdata/final_submit_dataset_a.csv')
+if stage == 'final_a':
+    submit_df = pd.read_csv('/tcdata/final_submit_dataset_a.csv')
+else:
+    submit_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_submit_dataset_b.csv'))
 sub = submit_df[['sn', 'fault_time']].copy()
 sub['label'] = y_pred
 print(sub['label'].value_counts() / sub.shape[0])
 
-sub.to_csv('./prediction_result/final_pred_a.csv', index=False)
+if stage == 'final_a':
+    sub.to_csv(os.path.join(os.path.dirname(__file__), '../prediction_result/final_pred_a.csv'), index=False)
+else:
+    sub.to_csv(os.path.join(os.path.dirname(__file__), '../prediction_result/baseline3_gkf_sn_new.csv'), index=False)

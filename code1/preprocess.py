@@ -10,15 +10,14 @@ from drain3.file_persistence import FilePersistence
 from drain3.template_miner_config import TemplateMinerConfig
 
 
-label1 = pd.read_csv('./data/preliminary_train_label_dataset.csv')
-label2 = pd.read_csv('./data/preliminary_train_label_dataset_s.csv')
+label1 = pd.read_csv('../data/preliminary_train_label_dataset.csv')
+label2 = pd.read_csv('../data/preliminary_train_label_dataset_s.csv')
 label_df = pd.concat([label1, label2]).reset_index(drop=True)
 
-train_log_df = pd.read_csv('./data/preliminary_sel_log_dataset.csv')
-test_log_df = pd.read_csv('./data/preliminary_sel_log_dataset_a.csv')
-test_b_log_df = pd.read_csv('./data/preliminary_sel_log_dataset_b.csv')
-final_test_a_log_df = pd.read_csv('/tcdata/final_sel_log_dataset_a.csv')
-log_df = pd.concat([train_log_df, test_log_df, test_b_log_df, final_test_a_log_df]).reset_index(drop=True)
+train_log_df = pd.read_csv('../data/preliminary_sel_log_dataset.csv')
+test_log_df = pd.read_csv('../data/preliminary_sel_log_dataset_a.csv')
+test_b_log_df = pd.read_csv('../data/preliminary_sel_log_dataset_b.csv')
+log_df = pd.concat([train_log_df, test_log_df, test_b_log_df]).reset_index(drop=True)
 log_df = log_df.dropna(subset=['server_model'])
 log_df = log_df.fillna('MISSING')
 
@@ -117,4 +116,4 @@ def match_template(df, template_miner, template_dic):
 
 log_df = log_df.apply(match_template, template_miner=template_miner, template_dic=template_dic, axis=1)
 
-log_df.to_csv('log_template.csv', index=False)
+log_df.to_csv('../user_data/log_template.csv', index=False)
