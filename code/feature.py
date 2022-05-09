@@ -5,11 +5,18 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from collections import Counter
+from tsfresh.feature_extraction.feature_calculators import abs_energy, benford_correlation, count_above, \
+    count_above_mean, mean_abs_change, mean_change, percentage_of_reoccurring_datapoints_to_all_datapoints, \
+    percentage_of_reoccurring_values_to_all_values, sample_entropy
 
 from scipy.stats import skew, kurtosis
 from gensim.models.word2vec import Word2Vec
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
+
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--stage")
@@ -208,15 +215,15 @@ def get_time_feature(df, fault_time_ts, suffix):
         'second_span5_%s'%suffix: second_span_5,
         'second_span10_%s'%suffix: second_span_10,
         'second_span_mean_%s'%suffix: second_span_mean,
-        'second_span_std_%s'%suffix: second_span_std,
-        'second_span_kurtosis_%s'%suffix: second_span_kurtosis,
-        'second_span_skew_%s'%suffix: second_span_skew,
+        # 'second_span_std_%s'%suffix: second_span_std,
+        # 'second_span_kurtosis_%s'%suffix: second_span_kurtosis,
+        # 'second_span_skew_%s'%suffix: second_span_skew,
         'time_diffs_avg_%s'%suffix: time_diffs_avg,
         'time_diffs_max_%s'%suffix: time_diffs_max,
         'time_diffs_min_%s'%suffix: time_diffs_min,
         'time_diffs_std_%s'%suffix: time_diffs_std,
-        'time_diffs_kurtosis_%s'%suffix: time_diffs_kurtosis,
-        'time_diffs_skew_%s'%suffix: time_diffs_skew,
+        # 'time_diffs_kurtosis_%s'%suffix: time_diffs_kurtosis,
+        # 'time_diffs_skew_%s'%suffix: time_diffs_skew,
         'max_time_diff_%s'%suffix: max_time_diff,
         'max_time_diff_div_first_time_span_%s'%suffix: max_time_diff_div_first_time_span,
     }
@@ -340,6 +347,28 @@ def get_feature5(df, fault_time_ts):
             data['%s_mean_span_time'%keyword] = np.mean(ts_diff_list)
     return data
 
+def get_feature6(df, fault_time_ts):
+    data = {}
+    for t in [60*5, 60*10, 60*30, 60*60]:
+        df_tmp = df[df['time_ts'] - fault_time_ts >= -t]
+        data['log_cnt_%d'%t] = df_tmp.shape[0]
+        data['log_precent_%d'%t] = df_tmp.shape[0] / df.shape[0] if df.shape[0] > 0 else np.nan
+    return data
+
+def get_ts_feature(df, fault_time_ts):
+    data = {}
+    diff_times = df['time_ts'].diff().values
+    data['abs_energy'] = abs_energy(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
+    data['benford_correlation'] = benford_correlation(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
+    data['count_above'] = count_above(diff_times[1:], [60*60]) if diff_times.shape[0] > 1 else np.nan
+    data['count_above_mean'] = count_above_mean(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
+    data['mean_abs_change'] = mean_abs_change(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
+    data['mean_change'] = mean_change(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
+    data['percentage_of_reoccurring_datapoints_to_all_datapoints'] = percentage_of_reoccurring_datapoints_to_all_datapoints(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
+    data['percentage_of_reoccurring_values_to_all_values'] = percentage_of_reoccurring_values_to_all_values(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
+    data['sample_entropy'] = sample_entropy(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
+    return data
+
 def make_dataset(dataset, data_type='train'):
     ret = []
     for idx in tqdm(range(dataset.shape[0])):
@@ -391,10 +420,16 @@ def make_dataset(dataset, data_type='train'):
         # data_tmp = get_feature5(df_tmp1, fault_time_ts)
         # data.update(data_tmp)
 
+        # data_tmp = get_feature6(sub_log, fault_time_ts)
+        # data.update(data_tmp)
+
         # for label in range(4):
         #     k = '%d'%(label)
         #     intersect = np.intersect1d(np.unique(df_tmp1['msg_id'].values), counter_map[k])
         #     data['intersect1d_%d'%label] = len(intersect) / len(counter_map[k])
+
+        # data_tmp = get_ts_feature(df_tmp1, fault_time_ts)
+        # data.update(data_tmp)
 
         sub_crashdump = crashdump_df[(crashdump_df['sn'] == sn) & \
             (crashdump_df['fault_time_ts'] <= fault_time_ts) & \
@@ -410,7 +445,7 @@ def make_dataset(dataset, data_type='train'):
             data['venus_module_cnt'] = len(sub_venus.iloc[-1]['module'].split(','))
         else:
             data['venus_module_cnt'] = 0
-        data['venus_cnt'] = sub_venus.shape[0]
+        # data['venus_cnt'] = sub_venus.shape[0]
 
         if data_type == 'train':
             data['label'] = row['label']

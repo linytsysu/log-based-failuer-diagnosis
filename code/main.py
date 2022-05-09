@@ -33,6 +33,14 @@ dtype = {
 df_train = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/train.csv'), dtype=dtype)
 df_test = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/test.csv'), dtype=dtype)
 
+# df_train2 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/train2.csv'))
+# df_train2 = df_train2.drop('server_model', axis=1)
+# df_test2 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/test2.csv'))
+# df_test2 = df_test2.drop('server_model', axis=1)
+
+# df_train = df_train.merge(df_train2, on=['sn', 'fault_time', 'label'])
+# df_test = df_test.merge(df_test2, on=['sn', 'fault_time'])
+
 print(df_train.shape, df_test.shape)
 
 for name in ['server_model', 'last_msg_id', 'last_template_id', 'tmp_appearance_1', 'tmp_appearance_2',
