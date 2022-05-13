@@ -25,6 +25,9 @@ test_b_log_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/pre
 if stage == 'final_a':
     final_test_a_log_df = pd.read_csv('/tcdata/final_sel_log_dataset_a.csv')
     log_df = pd.concat([train_log_df, test_log_df, test_b_log_df, final_test_a_log_df]).reset_index(drop=True)
+elif stage == 'final_b':
+    final_test_b_log_df = pd.read_csv('/tcdata/final_sel_log_dataset_b.csv')
+    log_df = pd.concat([train_log_df, test_log_df, test_b_log_df, final_test_b_log_df]).reset_index(drop=True)
 else:
     log_df = pd.concat([train_log_df, test_log_df, test_b_log_df]).reset_index(drop=True)
 log_df = log_df.dropna(subset=['server_model'])

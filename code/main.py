@@ -114,7 +114,7 @@ y_pred1 = np.zeros((len(df_test), 3))
 y_pred2 = np.zeros((len(df_test), 2))
 
 folds = GroupKFold(n_splits=FOLDS)
-for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label'], df_train['sn'])):
+for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label'], df_train['server_model'])):
     print('fold: %d'%fold)
     df_trian_sub = df_train.iloc[tr_ind].copy()
     df_valid_sub = df_train.iloc[val_ind].copy()
@@ -188,6 +188,8 @@ for i in range(y_pred1.shape[0]):
 
 if stage == 'final_a':
     submit_df = pd.read_csv('/tcdata/final_submit_dataset_a.csv')
+elif stage == 'final_b':
+    submit_df = pd.read_csv('/tcdata/final_submit_dataset_b.csv')
 else:
     submit_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_submit_dataset_b.csv'))
 sub = submit_df[['sn', 'fault_time']].copy()
@@ -196,5 +198,7 @@ print(sub['label'].value_counts() / sub.shape[0])
 
 if stage == 'final_a':
     sub.to_csv(os.path.join(os.path.dirname(__file__), '../prediction_result/final_pred_a.csv'), index=False)
+elif stage == 'final_b':
+    sub.to_csv(os.path.join(os.path.dirname(__file__), '../prediction_result/final_pred_b.csv'), index=False)
 else:
     sub.to_csv(os.path.join(os.path.dirname(__file__), '../prediction_result/baseline3_gkf_sn_new.csv'), index=False)

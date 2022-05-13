@@ -30,6 +30,8 @@ label_df = label_df.drop_duplicates().reset_index(drop=True)
 
 if stage == 'final_a':
     submit_df = pd.read_csv('/tcdata/final_submit_dataset_a.csv')
+elif stage == 'final_b':
+    submit_df = pd.read_csv('/tcdata/final_submit_dataset_b.csv')
 else:
     submit_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_submit_dataset_b.csv'))
 
@@ -52,6 +54,13 @@ if stage == 'final_a':
     venus_df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_venus_dataset.csv'))
     crashdump_df2 = pd.read_csv('/tcdata/final_crashdump_dataset_a.csv')
     venus_df2 = pd.read_csv('/tcdata/final_venus_dataset_a.csv')
+    crashdump_df = pd.concat([crashdump_df1, crashdump_df2]).reset_index(drop=True)
+    venus_df = pd.concat([venus_df1, venus_df2]).reset_index(drop=True)
+elif stage == 'final_b':
+    crashdump_df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_crashdump_dataset.csv'))
+    venus_df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_venus_dataset.csv'))
+    crashdump_df2 = pd.read_csv('/tcdata/final_crashdump_dataset_b.csv')
+    venus_df2 = pd.read_csv('/tcdata/final_venus_dataset_b.csv')
     crashdump_df = pd.concat([crashdump_df1, crashdump_df2]).reset_index(drop=True)
     venus_df = pd.concat([venus_df1, venus_df2]).reset_index(drop=True)
 else:
