@@ -1,4 +1,3 @@
-from cmath import log
 import os
 import json
 import argparse
@@ -10,10 +9,7 @@ from collections import Counter
 from scipy.stats import skew, kurtosis
 from gensim.models.word2vec import Word2Vec
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import TruncatedSVD
-from tsfresh.feature_extraction.feature_calculators import abs_energy, benford_correlation, count_above, \
-    count_above_mean, mean_abs_change, mean_change, percentage_of_reoccurring_datapoints_to_all_datapoints, \
-    percentage_of_reoccurring_values_to_all_values, sample_entropy
+from sklearn.decomposition import TruncatedSVD, LatentDirichletAllocation
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -31,6 +27,8 @@ label_df = label_df.drop_duplicates().reset_index(drop=True)
 
 if stage == 'final_a':
     submit_df = pd.read_csv('/tcdata/final_submit_dataset_a.csv')
+elif stage == 'final_b':
+    submit_df = pd.read_csv('/tcdata/final_submit_dataset_b.csv')
 else:
     submit_df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_submit_dataset_b.csv'))
 
@@ -53,6 +51,13 @@ if stage == 'final_a':
     venus_df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_venus_dataset.csv'))
     crashdump_df2 = pd.read_csv('/tcdata/final_crashdump_dataset_a.csv')
     venus_df2 = pd.read_csv('/tcdata/final_venus_dataset_a.csv')
+    crashdump_df = pd.concat([crashdump_df1, crashdump_df2]).reset_index(drop=True)
+    venus_df = pd.concat([venus_df1, venus_df2]).reset_index(drop=True)
+elif stage == 'final_b':
+    crashdump_df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_crashdump_dataset.csv'))
+    venus_df1 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../data/preliminary_venus_dataset.csv'))
+    crashdump_df2 = pd.read_csv('/tcdata/final_crashdump_dataset_b.csv')
+    venus_df2 = pd.read_csv('/tcdata/final_venus_dataset_b.csv')
     crashdump_df = pd.concat([crashdump_df1, crashdump_df2]).reset_index(drop=True)
     venus_df = pd.concat([venus_df1, venus_df2]).reset_index(drop=True)
 else:
@@ -87,21 +92,69 @@ log_df['msg_split_0'] = log_df['msg_lower'].apply(lambda x: safe_split(x, 0))
 log_df['msg_split_1'] = log_df['msg_lower'].apply(lambda x: safe_split(x, 1))
 log_df['msg_split_2'] = log_df['msg_lower'].apply(lambda x: safe_split(x, 2))
 
-def get_ts_feature(df, fault_time_ts):
+sentences_list = list()
+for info, group in log_df.groupby(['sn', 'time_gap']):
+    group = group.sort_values(by='time')
+    group = group.tail(20)
+    sentences_list.append("\n".join(group['msg_lower'].values.astype(str)))
+
+sentences = list()
+for s in sentences_list:
+    sentences.append([w for w in s.split()])
+
+w2v_model = Word2Vec(sentences, vector_size=64, window=3, min_count=2, sg=0, hs=1, workers=1, seed=2022)
+
+tfv = TfidfVectorizer(ngram_range=(1,3), min_df=5, max_features=50000)
+tfv.fit(sentences_list)
+X_tfidf = tfv.transform(sentences_list)
+svd = TruncatedSVD(n_components=16, random_state=42)
+svd.fit(X_tfidf)
+
+def get_w2v_mean(sentences):
+    emb_matrix = list()
+    vec = list()
+    for w in sentences.split():
+        if w in w2v_model.wv:
+            vec.append(w2v_model.wv[w])
+    if len(vec) > 0:
+        emb_matrix.append(np.mean(vec, axis=0))
+    else:
+        emb_matrix.append([0] * w2v_model.vector_size)
+    return emb_matrix
+
+def get_w2v_feature(df):
+    vec = get_w2v_mean('\n'.join(df['msg_lower'].values.astype(str)))[0]
     data = {}
-    log_times = df['time_ts'].values
-    span_times = []
-    for i in range(len(log_times)):
-        span_times.append(fault_time_ts - log_times[i])
-    data['abs_energy'] = abs_energy(span_times)
-    data['benford_correlation'] = benford_correlation(span_times)
-    data['count_above'] = count_above(span_times, [60*60])
-    data['count_above_mean'] = count_above_mean(span_times)
-    data['mean_abs_change'] = mean_abs_change(span_times)
-    data['mean_change'] = mean_change(span_times)
-    data['percentage_of_reoccurring_datapoints_to_all_datapoints'] = percentage_of_reoccurring_datapoints_to_all_datapoints(span_times)
-    data['percentage_of_reoccurring_values_to_all_values'] = percentage_of_reoccurring_values_to_all_values(span_times)
-    data['sample_entropy'] = sample_entropy(span_times)
+    for i in range(64):
+        data['w2v_%d'%i] = vec[i]
+    return data
+
+def get_feature3(df):
+    if df.shape[0] > 0:
+        server_model = df['server_model'].values[0]
+        sub = label_model_cnt_df[label_model_cnt_df['server_model'] == server_model]
+        probas = [0, 0, 0, 0]
+        for item in sub.values:
+            probas[item[1]] = item[4]
+    else:
+        probas = [0, 0, 0, 0]
+    return {
+        'server_model_p0': probas[0],
+        'server_model_p1': probas[1],
+        'server_model_p2': probas[2],
+        'server_model_p3': probas[3],
+    }
+
+def get_tfidf_svd(sentence, n_components=16):
+    X_tfidf = tfv.transform(sentence)
+    X_svd = svd.transform(X_tfidf)
+    return X_svd
+
+def get_tfidf_feature(df):
+    vec = get_tfidf_svd(['\n'.join(df['msg_lower'].values.astype(str))])[0]
+    data = {}
+    for i in range(16):
+        data['tfv_%d'%i] = vec[i]
     return data
 
 def make_dataset(dataset, data_type='train'):
@@ -120,14 +173,36 @@ def make_dataset(dataset, data_type='train'):
             'sn': sn,
             'fault_time': fault_time,
             'server_model': server_model,
-            # 'fault_hour': fault_time.hour,
-            # 'fault_dayofweek': fault_time.dayofweek,
+            'last_msg_id': last_msg_id,
+            'last_template_id': last_template_id,
         }
-        # df_tmp1 = sub_log[sub_log['time_ts'] - fault_time_ts >= -60 * 60 * 2]
         df_tmp1 = sub_log.tail(20)
+        df_tmp2 = sub_log.tail(50)
 
-        data_tmp = get_ts_feature(df_tmp1, fault_time_ts)
+        data_tmp = get_w2v_feature(df_tmp1)
         data.update(data_tmp)
+
+        data_tmp = get_feature3(df_tmp1)
+        data.update(data_tmp)
+
+        data_tmp = get_tfidf_feature(df_tmp1)
+        data.update(data_tmp)
+
+        sub_crashdump = crashdump_df[(crashdump_df['sn'] == sn) & \
+            (crashdump_df['fault_time_ts'] <= fault_time_ts) & \
+            (fault_time_ts - crashdump_df['fault_time_ts'] <= 60 * 60 * 24)]
+        sub_crashdump = sub_crashdump.sort_values(by='fault_time_ts')
+        data['crashdump_cnt'] = sub_crashdump.shape[0]
+
+        sub_venus = venus_df[(venus_df['sn'] == sn) & \
+            (venus_df['fault_time_ts'] <= fault_time_ts) & \
+            (fault_time_ts - venus_df['fault_time_ts'] <= 60 * 60 * 24)]
+        sub_venus = sub_venus.sort_values(by='fault_time_ts')
+        if sub_venus.shape[0] > 0:
+            data['venus_module_cnt'] = len(sub_venus.iloc[-1]['module'].split(','))
+        else:
+            data['venus_module_cnt'] = 0
+        # data['venus_cnt'] = sub_venus.shape[0]
 
         if data_type == 'train':
             data['label'] = row['label']
@@ -140,5 +215,5 @@ df_train = pd.DataFrame(train)
 test = make_dataset(submit_df, data_type='test')
 df_test = pd.DataFrame(test)
 
-df_train.to_csv(os.path.join(os.path.dirname(__file__), './train.csv'), index=False)
-df_test.to_csv(os.path.join(os.path.dirname(__file__), './test.csv'), index=False)
+df_train.to_csv(os.path.join(os.path.dirname(__file__), '../user_data/train.csv'), index=False)
+df_test.to_csv(os.path.join(os.path.dirname(__file__), '../user_data/test.csv'), index=False)

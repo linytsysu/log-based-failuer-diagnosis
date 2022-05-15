@@ -12,7 +12,7 @@ from tsfresh.feature_extraction.feature_calculators import abs_energy, benford_c
 from scipy.stats import skew, kurtosis
 from gensim.models.word2vec import Word2Vec
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import TruncatedSVD
+from sklearn.decomposition import TruncatedSVD, LatentDirichletAllocation
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -132,6 +132,8 @@ tfv.fit(sentences_list)
 X_tfidf = tfv.transform(sentences_list)
 svd = TruncatedSVD(n_components=16, random_state=42)
 svd.fit(X_tfidf)
+# lda = LatentDirichletAllocation(n_components=8, random_state=0)
+# lda.fit(X_tfidf)
 
 def get_statistical_features(df1, df2, suffix):
     cnt1 = df1.shape[0]
@@ -327,6 +329,18 @@ def get_tfidf_feature(df):
         data['tfv_%d'%i] = vec[i]
     return data
 
+def get_tfidf_lda(sentence):
+    X_tfidf = tfv.transform(sentence)
+    X_lda = lda.transform(X_tfidf)
+    return X_lda
+
+def get_lda_feature(df):
+    vec = get_tfidf_lda(['\n'.join(df['msg_lower'].values.astype(str))])[0]
+    data = {}
+    for i in range(8):
+        data['lda_%d'%i] = vec[i]
+    return data
+
 def get_feature4(df):
     if df.shape[0] == 0:
         last_template_cnt = np.nan
@@ -379,6 +393,20 @@ def get_ts_feature(df, fault_time_ts):
     data['sample_entropy'] = sample_entropy(diff_times[1:]) if diff_times.shape[0] > 1 else np.nan
     return data
 
+def get_log_text_feature(df):
+    text = '\n'.join(df['msg_lower'].values.astype(str))
+    total_word_cnt = len(text.split())
+    total_alphabet_cnt = np.sum([len(item) for item in text.split()])
+    mean_word_cnt_per_sentence = total_word_cnt / df.shape[0] if df.shape[0] > 0 else np.nan
+    mean_alphabet_cnt_per_sentence = total_alphabet_cnt / df.shape[0] if df.shape[0] > 0 else np.nan
+    mean_alphabet_cnt_per_word = total_alphabet_cnt / total_word_cnt if total_word_cnt > 0 else np.nan
+    return {
+        'total_word_cnt': total_word_cnt,
+        'mean_word_cnt_per_sentence': mean_word_cnt_per_sentence,
+        'mean_alphabet_cnt_per_sentence': mean_alphabet_cnt_per_sentence,
+        'mean_alphabet_cnt_per_word': mean_alphabet_cnt_per_word
+    }
+
 def make_dataset(dataset, data_type='train'):
     ret = []
     for idx in tqdm(range(dataset.shape[0])):
@@ -424,8 +452,14 @@ def make_dataset(dataset, data_type='train'):
         data_tmp = get_tfidf_feature(df_tmp1)
         data.update(data_tmp)
 
+        # data_tmp = get_lda_feature(df_tmp1)
+        # data.update(data_tmp)
+
         data_tmp = get_feature4(df_tmp1)
         data.update(data_tmp)
+
+        # data_tmp = get_log_text_feature(df_tmp1)
+        # data.update(data_tmp)
 
         # data_tmp = get_feature5(df_tmp1, fault_time_ts)
         # data.update(data_tmp)
