@@ -113,6 +113,7 @@ log_df['msg_split_2'] = log_df['msg_lower'].apply(lambda x: safe_split(x, 2))
 sentences_list = list()
 for info, group in log_df.groupby(['sn', 'time_gap']):
     group = group.sort_values(by='time')
+    group = group.tail(20)
     sentences_list.append("\n".join(group['msg_lower'].values.astype(str)))
 
 sentences = list()

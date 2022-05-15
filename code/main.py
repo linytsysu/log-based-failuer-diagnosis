@@ -9,6 +9,7 @@ from sklearn.utils.class_weight import compute_class_weight
 from catboost import CatBoostClassifier, CatBoostRegressor
 import lightgbm as lgb
 from tqdm import tqdm
+from sklearn.metrics import classification_report
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--stage")
@@ -105,78 +106,76 @@ def cat_model_train(x_train, y_train, x_val, y_val, mode='multiclass'):
                verbose=False)
     return model
 
-FOLDS = 10
-target = 'label'
-use_features = [col for col in df_train.columns if col not in ['sn', 'fault_time', target]]
-oof_pred = np.zeros((len(df_train),))
+def train_and_predict(df_train, df_test, mode):
+    FOLDS = 10
+    target = 'label'
+    use_features = [col for col in df_train.columns if col not in ['sn', 'fault_time', target]]
+    oof_pred = np.zeros((len(df_train),))
 
-y_pred1 = np.zeros((len(df_test), 3))
-y_pred2 = np.zeros((len(df_test), 2))
+    y_pred1 = np.zeros((len(df_test), 3))
+    y_pred2 = np.zeros((len(df_test), 2))
 
-folds = GroupKFold(n_splits=FOLDS)
-for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label'], df_train['server_model'])):
-    print('fold: %d'%fold)
-    df_trian_sub = df_train.iloc[tr_ind].copy()
-    df_valid_sub = df_train.iloc[val_ind].copy()
+    folds = GroupKFold(n_splits=FOLDS)
+    for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label'], df_train[mode])):
+        print('fold: %d'%fold)
+        df_trian_sub = df_train.iloc[tr_ind].copy()
+        df_valid_sub = df_train.iloc[val_ind].copy()
 
-    x_train1, x_val1 = df_trian_sub[use_features], df_valid_sub[use_features]
-    y_train1, y_val1 = df_trian_sub[target], df_valid_sub[target]
-    y_train1 = y_train1.apply(lambda x: 0 if x <= 1 else x-1)
-    y_val1 = y_val1.apply(lambda x: 0 if x <= 1 else x-1)
-    model1 = cat_model_train(x_train1, y_train1, x_val1, y_val1)
+        x_train1, x_val1 = df_trian_sub[use_features], df_valid_sub[use_features]
+        y_train1, y_val1 = df_trian_sub[target], df_valid_sub[target]
+        y_train1 = y_train1.apply(lambda x: 0 if x <= 1 else x-1)
+        y_val1 = y_val1.apply(lambda x: 0 if x <= 1 else x-1)
+        model1 = cat_model_train(x_train1, y_train1, x_val1, y_val1)
 
-    # print("Features importance...")
-    # feat_imp = pd.DataFrame({'imp': model1.feature_importances_, 'feature': use_features})
-    # feat_imp.sort_values(by='imp').to_csv('%d_imp1.csv'%fold, index=False)
-    # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
+        trn_proba = model1.predict_proba(x_train1)
+        val_proba = model1.predict_proba(x_val1)
 
-    trn_proba = model1.predict_proba(x_train1)
-    val_proba = model1.predict_proba(x_val1)
+        df_trian_sub['proba_0'] = trn_proba[:, 0]
+        df_trian_sub['proba_1'] = trn_proba[:, 1]
+        df_trian_sub['proba_2'] = trn_proba[:, 2]
+        df_valid_sub['proba_0'] = val_proba[:, 0]
+        df_valid_sub['proba_1'] = val_proba[:, 1]
+        df_valid_sub['proba_2'] = val_proba[:, 2]
 
-    df_trian_sub['proba_0'] = trn_proba[:, 0]
-    df_trian_sub['proba_1'] = trn_proba[:, 1]
-    df_trian_sub['proba_2'] = trn_proba[:, 2]
-    df_valid_sub['proba_0'] = val_proba[:, 0]
-    df_valid_sub['proba_1'] = val_proba[:, 1]
-    df_valid_sub['proba_2'] = val_proba[:, 2]
+        x_train2, x_val2 = df_trian_sub[df_trian_sub['label'] <= 1][use_features + ['proba_0', 'proba_1', 'proba_2']], \
+                        df_valid_sub[df_valid_sub['label'] <= 1][use_features + ['proba_0', 'proba_1', 'proba_2']]
+        y_train2, y_val2 = df_trian_sub[df_trian_sub['label'] <= 1][target],\
+                        df_valid_sub[df_valid_sub['label'] <= 1][target]
+        model2 = cat_model_train(x_train2, y_train2, x_val2, y_val2, mode='binary')
 
-    x_train2, x_val2 = df_trian_sub[df_trian_sub['label'] <= 1][use_features + ['proba_0', 'proba_1', 'proba_2']], \
-                       df_valid_sub[df_valid_sub['label'] <= 1][use_features + ['proba_0', 'proba_1', 'proba_2']]
-    y_train2, y_val2 = df_trian_sub[df_trian_sub['label'] <= 1][target],\
-                       df_valid_sub[df_valid_sub['label'] <= 1][target]
-    model2 = cat_model_train(x_train2, y_train2, x_val2, y_val2, mode='binary')
+        y_pred1 += model1.predict_proba(df_test[use_features]) / folds.n_splits
+        df_test['proba_0'] = y_pred1[:, 0]
+        df_test['proba_1'] = y_pred1[:, 1]
+        df_test['proba_2'] = y_pred1[:, 2]
+        y_pred2 += model2.predict_proba(df_test[use_features + ['proba_0', 'proba_1', 'proba_2']]) / folds.n_splits
 
-    # print("Features importance...")
-    # feat_imp = pd.DataFrame({'imp': model2.feature_importances_, 'feature': use_features + ['proba_0', 'proba_1', 'proba_2']})
-    # feat_imp.sort_values(by='imp').to_csv('%d_imp2.csv'%fold, index=False)
-    # print(feat_imp.sort_values(by='imp').reset_index(drop=True))
+        val_pred = []
+        val_proba = model1.predict_proba(x_val1)
+        for i in range(val_proba.shape[0]):
+            if np.argmax(val_proba[i]) == 0:
+                proba = model2.predict_proba([x_val1.iloc[i].values.tolist() + val_proba[i].tolist()])
+                val_pred.append(np.argmax(proba[0]))
+            else:
+                val_pred.append(np.argmax(val_proba[i])+1)
 
-    y_pred1 += model1.predict_proba(df_test[use_features]) / folds.n_splits
-    df_test['proba_0'] = y_pred1[:, 0]
-    df_test['proba_1'] = y_pred1[:, 1]
-    df_test['proba_2'] = y_pred1[:, 2]
-    y_pred2 += model2.predict_proba(df_test[use_features + ['proba_0', 'proba_1', 'proba_2']]) / folds.n_splits
+        score = f1_score(df_valid_sub[target], val_pred, average='macro')
+        print(f'F1 score: {score}')
+        score = macro_f1(df_valid_sub[target].values, val_pred)
+        print(f'F1 score: {score}')
 
-    val_pred = []
-    val_proba = model1.predict_proba(x_val1)
-    for i in range(val_proba.shape[0]):
-        if np.argmax(val_proba[i]) == 0:
-            proba = model2.predict_proba([x_val1.iloc[i].values.tolist() + val_proba[i].tolist()])
-            val_pred.append(np.argmax(proba[0]))
-        else:
-            val_pred.append(np.argmax(val_proba[i])+1)
+        oof_pred[val_ind] = val_pred
 
-    score = f1_score(df_valid_sub[target], val_pred, average='macro')
-    print(f'F1 score: {score}')
-    score = macro_f1(df_valid_sub[target].values, val_pred)
-    print(f'F1 score: {score}')
+        print(classification_report(df_train[target], oof_pred))
 
-    oof_pred[val_ind] = val_pred
+        print(macro_f1(df_train[target].values, oof_pred))
 
-from sklearn.metrics import classification_report
-print(classification_report(df_train[target], oof_pred))
+    return y_pred1, y_pred2
 
-print(macro_f1(df_train[target].values, oof_pred))
+y_pred_v1_1, y_pred_v1_2 = train_and_predict(df_train, df_test, 'sn')
+y_pred_v2_1, y_pred_v2_2 = train_and_predict(df_train, df_test, 'server_model')
+
+y_pred1 = (y_pred_v1_1 + y_pred_v2_1) / 2
+y_pred2 = (y_pred_v1_2 + y_pred_v2_2) / 2
 
 y_pred = []
 for i in range(y_pred1.shape[0]):
