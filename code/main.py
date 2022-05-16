@@ -35,9 +35,7 @@ df_train = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/tra
 df_test = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/test.csv'), dtype=dtype)
 
 # df_train2 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/train2.csv'))
-# df_train2 = df_train2.drop('server_model', axis=1)
 # df_test2 = pd.read_csv(os.path.join(os.path.dirname(__file__), '../user_data/test2.csv'))
-# df_test2 = df_test2.drop('server_model', axis=1)
 
 # df_train = df_train.merge(df_train2, on=['sn', 'fault_time', 'label'])
 # df_test = df_test.merge(df_test2, on=['sn', 'fault_time'])
@@ -115,7 +113,7 @@ def train_and_predict(df_train, df_test, mode):
     y_pred1 = np.zeros((len(df_test), 3))
     y_pred2 = np.zeros((len(df_test), 2))
 
-    folds = GroupKFold(n_splits=FOLDS)
+    folds = StratifiedKFold(n_splits=FOLDS, shuffle=True, random_state=42)
     for fold, (tr_ind, val_ind) in enumerate(folds.split(df_train, df_train['label'], df_train[mode])):
         print('fold: %d'%fold)
         df_trian_sub = df_train.iloc[tr_ind].copy()
@@ -165,10 +163,8 @@ def train_and_predict(df_train, df_test, mode):
 
         oof_pred[val_ind] = val_pred
 
-        print(classification_report(df_train[target], oof_pred))
-
-        print(macro_f1(df_train[target].values, oof_pred))
-
+    print(classification_report(df_train[target], oof_pred))
+    print(macro_f1(df_train[target].values, oof_pred))
     return y_pred1, y_pred2
 
 y_pred_v1_1, y_pred_v1_2 = train_and_predict(df_train, df_test, 'sn')
