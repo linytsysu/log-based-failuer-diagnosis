@@ -329,17 +329,17 @@ def get_tfidf_feature(df):
         data['tfv_%d'%i] = vec[i]
     return data
 
-def get_tfidf_lda(sentence):
-    X_tfidf = tfv.transform(sentence)
-    X_lda = lda.transform(X_tfidf)
-    return X_lda
+# def get_tfidf_lda(sentence):
+#     X_tfidf = tfv.transform(sentence)
+#     X_lda = lda.transform(X_tfidf)
+#     return X_lda
 
-def get_lda_feature(df):
-    vec = get_tfidf_lda(['\n'.join(df['msg_lower'].values.astype(str))])[0]
-    data = {}
-    for i in range(8):
-        data['lda_%d'%i] = vec[i]
-    return data
+# def get_lda_feature(df):
+#     vec = get_tfidf_lda(['\n'.join(df['msg_lower'].values.astype(str))])[0]
+#     data = {}
+#     for i in range(8):
+#         data['lda_%d'%i] = vec[i]
+#     return data
 
 def get_feature4(df):
     if df.shape[0] == 0:
