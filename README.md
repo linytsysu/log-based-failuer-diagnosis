@@ -10,6 +10,8 @@ https://tianchi.aliyun.com/competition/entrance/531947/introduction
 
 ![问题描述](./pics/contest.png)
 
+<img src='./pics/contest.png' width="150px">
+
 给定一段时间的服务器系统日志数据，从数据中挖掘出和各类故障相关的特征，采用合适的机器学习算法诊断服务器的故障类型。
 
 + 故障类型：0类和1类表示CPU相关故障，2类表示内存相关故障，3类表示其他类型故障
@@ -18,7 +20,7 @@ https://tianchi.aliyun.com/competition/entrance/531947/introduction
 
 ## 方案介绍
 
-![方案介绍](./pics/intruduction.png)
+![方案介绍](./pics/introduction.png)
 
 ### 数据预处理
 
