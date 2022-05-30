@@ -8,9 +8,7 @@ https://tianchi.aliyun.com/competition/entrance/531947/introduction
 
 ### 问题描述
 
-![问题描述](./pics/contest.png)
-
-<img src='./pics/contest.png' width="150px">
+<img src='./pics/contest.png' width="400px">
 
 给定一段时间的服务器系统日志数据，从数据中挖掘出和各类故障相关的特征，采用合适的机器学习算法诊断服务器的故障类型。
 
@@ -20,7 +18,7 @@ https://tianchi.aliyun.com/competition/entrance/531947/introduction
 
 ## 方案介绍
 
-![方案介绍](./pics/introduction.png)
+<img src='./pics/introduction.png' width="400px">
 
 ### 数据预处理
 
@@ -32,13 +30,13 @@ https://tianchi.aliyun.com/competition/entrance/531947/introduction
 
 ### 特征工程
 
-![特征](./pics/features.png)
+<img src='./pics/features.png' width="400px">
 
 特征工程具体内容见`code/feature.py`
 
 ### 模型训练
 
-![模型训练](./pics/model.png)
+<img src='./pics/model.png' width="400px">
 
 模型训练具体内容见`code/main.py`
 
