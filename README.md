@@ -18,7 +18,7 @@ https://tianchi.aliyun.com/competition/entrance/531947/introduction
 
 ## 方案介绍
 
-<img src='./pics/introduction.png' width="400px">
+<img src='./pics/introduction.png' width="600px">
 
 ### 数据预处理
 
@@ -30,13 +30,13 @@ https://tianchi.aliyun.com/competition/entrance/531947/introduction
 
 ### 特征工程
 
-<img src='./pics/features.png' width="400px">
+<img src='./pics/features.png' width="600px">
 
 特征工程具体内容见`code/feature.py`
 
 ### 模型训练
 
-<img src='./pics/model.png' width="400px">
+<img src='./pics/model.png' width="600px">
 
 模型训练具体内容见`code/main.py`
 
